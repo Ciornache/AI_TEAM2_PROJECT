@@ -1,0 +1,2204 @@
+{
+  "nodes": [
+    {
+      "id": "algo_bfs",
+      "name": "BFS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Breadth-First Search",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "slow": true,
+        "guaranteed": true,
+        "consistent": true
+      }
+    },
+    {
+      "id": "algo_dfs",
+      "name": "DFS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Depth-First Search",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "guaranteed": true
+      }
+    },
+    {
+      "id": "algo_ucs",
+      "name": "UCS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Uniform Cost Search",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "admissible": true
+      }
+    },
+    {
+      "id": "algo_dls",
+      "name": "DLS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Depth-Limited Search",
+        "complete": false,
+        "optimal": false,
+        "category": true,
+        "efficient": true,
+        "slow": true
+      }
+    },
+    {
+      "id": "algo_iddfs",
+      "name": "IDDFS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Iterative Deepening DFS",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "guaranteed": true,
+        "admissible": true
+      }
+    },
+    {
+      "id": "algo_bidirectional",
+      "name": "Bidirectional Search",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Bidirectional Search",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "fast": true,
+        "efficient": true
+      }
+    },
+    {
+      "id": "algo_a_star",
+      "name": "A*",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "A-Star Search",
+        "complete": true,
+        "optimal": true,
+        "admissible": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_ida_star",
+      "name": "IDA*",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Iterative Deepening A*",
+        "complete": true,
+        "optimal": true,
+        "admissible": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_gbfs",
+      "name": "GBFS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Greedy Best-First Search",
+        "complete": false,
+        "optimal": true,
+        "category": true,
+        "admissible": true,
+        "fast": true,
+        "guaranteed": true
+      }
+    },
+    {
+      "id": "algo_rbfs",
+      "name": "RBFS",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Recursive Best-First Search",
+        "complete": true,
+        "optimal": true,
+        "category": true,
+        "admissible": true
+      }
+    },
+    {
+      "id": "algo_sma_star",
+      "name": "SMA*",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Simplified Memory-Bounded A*",
+        "complete": true,
+        "optimal": true,
+        "consistent": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_hill_climbing",
+      "name": "Hill Climbing",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Hill Climbing",
+        "complete": false,
+        "optimal": false
+      }
+    },
+    {
+      "id": "algo_simulated_annealing",
+      "name": "Simulated Annealing",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Simulated Annealing",
+        "complete": false,
+        "optimal": false,
+        "category": true,
+        "fast": true,
+        "slow": true
+      }
+    },
+    {
+      "id": "algo_genetic",
+      "name": "Genetic Algorithm",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Genetic Algorithm",
+        "complete": false,
+        "optimal": false
+      }
+    },
+    {
+      "id": "algo_beam_search",
+      "name": "Beam Search",
+      "type": "algorithm",
+      "properties": {
+        "full_name": "Beam Search",
+        "complete": false,
+        "optimal": false,
+        "category": true,
+        "fast": true,
+        "slow": true,
+        "guaranteed": true
+      }
+    },
+    {
+      "id": "prob_8_puzzle",
+      "name": "8-Puzzle",
+      "type": "problem",
+      "properties": {
+        "category": true,
+        "state_space": true,
+        "admissible": true,
+        "optimal": true
+      }
+    },
+    {
+      "id": "prob_15_puzzle",
+      "name": "15-Puzzle",
+      "type": "problem",
+      "properties": {
+        "category": "sliding_tile"
+      }
+    },
+    {
+      "id": "prob_n_queens",
+      "name": "N-Queens",
+      "type": "problem",
+      "properties": {
+        "category": "constraint_satisfaction"
+      }
+    },
+    {
+      "id": "prob_tsp",
+      "name": "TSP",
+      "type": "problem",
+      "properties": {
+        "category": "optimization"
+      }
+    },
+    {
+      "id": "prob_route_finding",
+      "name": "Route Finding",
+      "type": "problem",
+      "properties": {
+        "category": true,
+        "admissible": true
+      }
+    },
+    {
+      "id": "prob_knight_tour",
+      "name": "Knight's Tour",
+      "type": "problem",
+      "properties": {
+        "category": "path_finding"
+      }
+    },
+    {
+      "id": "prob_hanoi",
+      "name": "Tower of Hanoi",
+      "type": "problem",
+      "properties": {
+        "category": "puzzle",
+        "consistent": true
+      }
+    },
+    {
+      "id": "prob_graph_coloring",
+      "name": "Graph Coloring",
+      "type": "problem",
+      "properties": {
+        "category": "constraint_satisfaction",
+        "complete": true
+      }
+    },
+    {
+      "id": "prob_sudoku",
+      "name": "Sudoku",
+      "type": "problem",
+      "properties": {
+        "category": "constraint_satisfaction"
+      }
+    },
+    {
+      "id": "prob_missionaries_cannibals",
+      "name": "Missionaries and Cannibals",
+      "type": "problem",
+      "properties": {
+        "category": "state_space_search"
+      }
+    },
+    {
+      "id": "prob_maze",
+      "name": "Maze Solving",
+      "type": "problem",
+      "properties": {
+        "category": "path_finding"
+      }
+    },
+    {
+      "id": "heur_manhattan",
+      "name": "Manhattan Distance",
+      "type": "heuristic",
+      "properties": {
+        "category": true,
+        "admissible": true,
+        "consistent": true
+      }
+    },
+    {
+      "id": "heur_euclidean",
+      "name": "Euclidean Distance",
+      "type": "heuristic",
+      "properties": {
+        "category": true,
+        "admissible": true,
+        "consistent": true
+      }
+    },
+    {
+      "id": "heur_misplaced_tiles",
+      "name": "Misplaced Tiles",
+      "type": "heuristic",
+      "properties": {
+        "category": true,
+        "admissible": true
+      }
+    },
+    {
+      "id": "heur_linear_conflict",
+      "name": "Linear Conflict",
+      "type": "heuristic",
+      "properties": {
+        "category": "heuristic",
+        "admissible": true
+      }
+    },
+    {
+      "id": "opt_memoization",
+      "name": "Memoization",
+      "type": "optimization",
+      "properties": {
+        "category": "optimization_technique",
+        "optimal": true
+      }
+    },
+    {
+      "id": "opt_pruning",
+      "name": "Pruning",
+      "type": "optimization",
+      "properties": {
+        "category": true,
+        "optimal": true,
+        "complete": true
+      }
+    },
+    {
+      "id": "opt_alpha_beta",
+      "name": "Alpha-Beta Pruning",
+      "type": "optimization",
+      "properties": {
+        "category": "optimization_technique"
+      }
+    },
+    {
+      "id": "opt_caching",
+      "name": "Caching",
+      "type": "optimization",
+      "properties": {
+        "category": true,
+        "optimal": true,
+        "complete": true
+      }
+    },
+    {
+      "id": "opt_parallel",
+      "name": "Parallel Processing",
+      "type": "optimization",
+      "properties": {
+        "category": "optimization_technique"
+      }
+    },
+    {
+      "id": "cat_informed",
+      "name": "Informed",
+      "type": "category",
+      "properties": {}
+    },
+    {
+      "id": "cat_uninformed",
+      "name": "Uninformed",
+      "type": "category",
+      "properties": {}
+    },
+    {
+      "id": "cat_local_search",
+      "name": "Local Search",
+      "type": "category",
+      "properties": {}
+    }
+  ],
+  "edges": [
+    {
+      "source": "algo_iddfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": "State s piece tower Implement transitions and validation separately it s good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piece tower s Transition "
+    },
+    {
+      "source": "heur_euclidean",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7071067811865475,
+      "context": "estimate of the distance to thegoalh n c a l l e daheuristic If we knew the distance to goal exactly it would not even be search we could just be greedy But even if we do not know the exact distance w"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "algo_ucs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_bfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "algo_dfs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 0.2581988897471611,
+        "mention_count": 2
+      },
+      "confidence": 0.2581988897471611,
+      "context": "ach tile 8 3 1 2 2 2 3 3 2 18 n h1 n h2 StartState h1 StartState h2 5 1 DOMIN ATING HEURISTICS DOMIN ATING HEURISTICS If admissible for all then dominat es and is be tter for se arch Typic al se arch "
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_ida_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "co_occurrence_strength": 0.31622776601683794,
+        "mention_count": 2
+      },
+      "confidence": 0.31622776601683794,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 6
+      },
+      "confidence": 0.8,
+      "context": "oid strategy State s While isFinal s Choose piece tower If Validate s piece tower s Transition s piece tower Search strategies Uninformed no distinction between states Random BFS and Uniform Cost DFS "
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_genetic",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_a_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_rbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.1547005383792517,
+        "mention_count": 6
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.6324555320336759,
+        "mention_count": 4
+      },
+      "confidence": 0.6324555320336759,
+      "context": "Boolean Validate State s piece tower Implement transitions and validation separately it s good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piece to"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_ucs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.2060453783110545,
+        "mention_count": 16
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_a_star",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "explores nodes by d S h S where h S is the estimated distance to the goal state h has to be an admissible heuristic and a distance Always chooses the unexplored state which is closest to both the init"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "algo_ucs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 1.2247448713915892,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 10
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "heur_manhattan",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.5773502691896258,
+      "context": "Heuristichis calledadmissibleifh n h n n Admissible heuristics areoptimistic Note that ifhis admissible thenh g 0 g G A trivial case of an admissible heuristic ish n 0 n In this case heuristic search "
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.6329931618554523,
+        "mention_count": 6
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "prob_route_finding",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "A explores nodes by d S h S where h S is the estimated distance to the goal state h has to be an admissible heuristic and a distance Always chooses the unexplored state which is closest to both the in"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 6
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 3
+      },
+      "confidence": 0.5773502691896258,
+      "context": ""
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_sma_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "heur_euclidean",
+      "target": "prob_route_finding",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.5773502691896258,
+      "context": ""
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "algo_genetic",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.4833333333333334,
+        "mention_count": 91
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_bfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "cat_local_search",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 0.8660254037844387,
+        "mention_count": 32
+      },
+      "confidence": 0.8,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "heur_euclidean",
+      "target": "prob_8_puzzle",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.5773502691896258,
+      "context": ""
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "prob_8_puzzle",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_a_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 0.7131997238879487,
+        "mention_count": 25
+      },
+      "confidence": 0.7131997238879487,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "prob_n_queens",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.6172133998483676,
+        "mention_count": 4
+      },
+      "confidence": 0.6172133998483676,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_a_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_a_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.4444444444444446,
+        "mention_count": 246
+      },
+      "confidence": 0.8,
+      "context": "transitions from the initial state Explores all immediate neighbors accessible states until no more neighbors or final state found Has to memorise each generated state very costly Might visit the same"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "prob_n_queens",
+      "target": "prob_n_queens",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 3.142857142857143,
+        "mention_count": 22
+      },
+      "confidence": 0.8,
+      "context": "PUZZLE States a 3 x 3 matrix of integers Initial state any state Actions move the blank space le right up down Goal test equal to the goal state 1 1 EXAMPL E THE 8 QUEENS PROBLEM EXAMPL E THE 8 QUEENS"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": "tower Implement transitions and validation separately it s good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piece tower s Transition s piece tower "
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "heur_manhattan",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7071067811865475,
+      "context": "that ifhis admissible thenh g 0 g G A trivial case of an admissible heuristic ish n 0 n In this case heuristic search becomes uniform cost search COMP 424 Lecture 3 January 14 201314 Examples of admis"
+    },
+    {
+      "source": "opt_memoization",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.22941573387056174,
+        "mention_count": 1
+      },
+      "confidence": 0.22941573387056174,
+      "context": "operator step cost 𝑏𝑏𝑓𝑓 𝛿𝛿nodes of storage required 127 Uninformed Informed Search3 10 4 Comparison of A and IDA algorithm Iterative Deepening Search IDS is nothing but BFS plus DFS for tree search ID"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_a_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed",
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7071067811865475,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_ucs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 8
+      },
+      "confidence": 0.8,
+      "context": "ent state yield new Sear chNode child total cost so far estimated cost to goal information for calculating ﬁnal path 2 2 UNINF ORMED SEARCH R N 3 4 UNINF ORMED SEARCH R N 3 4 DEP TH FIRST SEARCH DEP T"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "prob_8_puzzle",
+      "relation_type": "solves",
+      "properties": {
+        "co_occurrence_strength": 0.24618298195866545,
+        "mention_count": 2
+      },
+      "confidence": 0.24618298195866545,
+      "context": ""
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.7391639824998364,
+        "mention_count": 156
+      },
+      "confidence": 0.8,
+      "context": "s Choose piece tower If Validate s piece tower s Transition s piece tower Search strategies Uninformed no distinction between states Random BFS and Uniform Cost DFS and Iterative Deepening Backtrackin"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 3.142857142857143,
+        "mention_count": 154
+      },
+      "confidence": 0.8,
+      "context": "Lecture 3 Informed Heuristic Search Best First GBFS Search Heuristic Search A search Proof of optimality ofA Variations iterative deepening real time search macro actions COMP 424 Lecture 3 January 14"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "algo_hill_climbing",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "opt_pruning",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "more infinite paths Random vs DFS The same if random remembers visited neighbours Backtracking vs DFS NOT the same Backtracking sets an order for the neighbor states How do you order states Backtracki"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_dfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 10
+      },
+      "confidence": 0.8,
+      "context": "good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piece tower s Transition s piece tower Search strategies Uninformed no distinction between states "
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 9
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_dls",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5,
+        "mention_count": 2
+      },
+      "confidence": 0.5,
+      "context": "the problem The path cost from current state to goal state is calculated to select the minimum cost path as the next state It uses domain specific knowledge for the searching process 89 Uninformed Inf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_rbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": "i k Boolean Validate State s piece tower Implement transitions and validation separately it s good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piec"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "co_occurrence_strength": 0.8944271909999159,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_dls",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.31622776601683794,
+        "mention_count": 6
+      },
+      "confidence": 0.31622776601683794,
+      "context": "We see that both forward and backward search meets at node 9 called the intersection node So the total path traced by forwarding search and the path traced by backward search is the optimal solution T"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_sma_star",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.5773502691896258,
+      "context": ""
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_a_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "cat_informed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_a_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "prob_8_puzzle",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.6666666666666666,
+        "mention_count": 6
+      },
+      "confidence": 0.6666666666666666,
+      "context": "the distance to goal exactly it would not even be search we could just be greedy But even if we do not know the exact distance we often have someintuition about this distance The straight line between"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 6
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_sma_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "cat_informed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "algo_ucs",
+      "relation_type": "used_by",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_ucs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.1547005383792517,
+        "mention_count": 48
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.95,
+        "mention_count": 80
+      },
+      "confidence": 0.8,
+      "context": "be re sorted and extra states removed after every new explored state Explores all states in the sorted list until the final state is found should be first in the list Does not guarantee the optimum so"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_dls",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.2946278254943948,
+        "mention_count": 5
+      },
+      "confidence": 0.2946278254943948,
+      "context": "see that both forward and backward search meets at node 9 called the intersection node So the total path traced by forwarding search and the path traced by backward search is the optimal solution This"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_graph_coloring",
+      "target": "prob_hanoi",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 1
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "cat_informed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_bfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.3636363636363638,
+        "mention_count": 176
+      },
+      "confidence": 0.8,
+      "context": "s Choose piece tower If Validate s piece tower s Transition s piece tower Search strategies Uninformed no distinction between states Random BFS and Uniform Cost DFS and Iterative Deepening Backtrackin"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": "state identify special states and the problem space describe the transitions and validate them specify a search strategy Search strategies Uninformed no distinction between states Random BFS and Unifo"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 3.076923076923077,
+        "mention_count": 82
+      },
+      "confidence": 0.8,
+      "context": "tower Implement transitions and validation separately it s good practice Search strategy V oid strategy State s While isFinal s Choose piece tower If Validate s piece tower s Transition s piece tower "
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "cat_local_search",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5803810000880093,
+        "mention_count": 16
+      },
+      "confidence": 0.5803810000880093,
+      "context": "4 Properties of heuristic algorithm 3 8 5 Results on A algorithm 3 9 Problem reduction search 3 9 1 Problem definition in AND OR graph 3 9 2 AO algorithm 3 9 3 Advantages of AO algorithm 86 Artificial"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_genetic",
+      "target": "cat_local_search",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_bfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 0.6324555320336759,
+        "mention_count": 7
+      },
+      "confidence": 0.6324555320336759,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.23570226039551587,
+        "mention_count": 1
+      },
+      "confidence": 0.23570226039551587,
+      "context": "expand nodes based on the distance fromthe start node Obviously we always know that Informed search methodsalso use some estimate of the distance to thegoalh n c a l l e daheuristic If we knew the dis"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.4142135623730951,
+        "mention_count": 9
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_sma_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "cat_informed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bfs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "heur_manhattan",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7071067811865475,
+      "context": "3 January 14 201313Admissible heuristics Leth n be the shortest path fromnto any goal state Heuristichis calledadmissibleifh n h n n Admissible heuristics areoptimistic Note that ifhis admissible then"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_ucs",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_hill_climbing",
+      "target": "cat_local_search",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_a_star",
+      "target": "cat_informed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "heur_manhattan",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.1547005383792517,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "Admissible heuristics areoptimistic Note that ifhis admissible thenh g 0 g G A trivial case of an admissible heuristic ish n 0 n In this case heuristic search becomes uniform cost search COMP 424 Lect"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 0.9805806756909202,
+        "mention_count": 10
+      },
+      "confidence": 0.8,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "opt_memoization",
+      "relation_type": "can_use",
+      "properties": {
+        "co_occurrence_strength": 0.21081851067789195,
+        "mention_count": 2
+      },
+      "confidence": 0.21081851067789195,
+      "context": ""
+    },
+    {
+      "source": "algo_sma_star",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.894736842105263,
+        "mention_count": 36
+      },
+      "confidence": 0.8,
+      "context": "3 9 3 Advantages of AO algorithm 86 Artificial Intelligence Introduction3 10 Memory Bound heuristic search 3 10 1 Iterative Deepening A IDA 3 10 2 Working of IDA 3 10 3 Analysis of IDA 3 10 4 Comparis"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_sma_star",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5,
+        "mention_count": 1
+      },
+      "confidence": 0.5,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bidirectional",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_uninformed",
+        "co_occurrence_strength": 0.8944271909999159,
+        "mention_count": 34
+      },
+      "confidence": 0.8,
+      "context": "Both belong to uninformed category"
+    },
+    {
+      "source": "algo_bidirectional",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "algo_a_star",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 4
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.6329931618554523,
+        "mention_count": 8
+      },
+      "confidence": 0.8,
+      "context": "s Choose piece tower If Validate s piece tower s Transition s piece tower Search strategies Uninformed no distinction between states Random BFS and Uniform Cost DFS and Iterative Deepening Backtrackin"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_bidirectional",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_hill_climbing",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_sma_star",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "prob_8_puzzle",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.2247448713915892,
+        "mention_count": 3
+      },
+      "confidence": 0.8,
+      "context": ""
+    },
+    {
+      "source": "algo_genetic",
+      "target": "algo_hill_climbing",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_local_search"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to local_search category"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "cat_uninformed",
+      "relation_type": "classified_as",
+      "properties": {},
+      "confidence": 1.0,
+      "context": "Pre-seeded classification"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_a_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 2
+      },
+      "confidence": 0.8,
+      "context": "c a l l e daheuristic If we knew the distance to goal exactly it would not even be search we could just be greedy But even if we do not know the exact distance we often have someintuition about this d"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "heur_euclidean",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.5163977794943222,
+        "mention_count": 5
+      },
+      "confidence": 0.5163977794943222,
+      "context": ""
+    },
+    {
+      "source": "algo_ida_star",
+      "target": "algo_sma_star",
+      "relation_type": "related_to",
+      "properties": {
+        "inferred": true,
+        "reason": "same_category_informed"
+      },
+      "confidence": 0.5,
+      "context": "Both belong to informed category"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.23570226039551587,
+        "mention_count": 1
+      },
+      "confidence": 0.23570226039551587,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 2
+      },
+      "confidence": 0.7071067811865475,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    }
+  ]
+}
