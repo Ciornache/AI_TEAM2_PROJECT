@@ -15,8 +15,13 @@ class Node:
     """Represents a concept in the knowledge graph."""
     id: str  # Unique identifier
     name: str  # Display name
-    type: str  # "algorithm", "problem", "heuristic", "property", "time_complexity", "space_complexity", "time_issue", "memory_issue"
+    type: str  # "algorithm", "problem", "heuristic", "property", "time_complexity", "memory_complexity", "category", etc.
     properties: Dict[str, Any] = field(default_factory=dict)
+    
+    # Performance characteristics per instance type (for algorithms and complexities)
+    performance_profiles: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    # Example: {"small": {"efficiency": 0.9, "practical": "excellent"}, 
+    #           "large": {"efficiency": 0.3, "practical": "poor"}}
     
     def __hash__(self):
         return hash(self.id)
@@ -30,10 +35,23 @@ class Edge:
     """Represents a relationship between two concepts."""
     source: str  # Node ID
     target: str  # Node ID
-    relation_type: str  # "uses", "solves", "has_property", "classified_as", "has_time_complexity", "has_space_complexity", "suffers_from", etc.
+    relation_type: str  # "uses", "solves", "has_property", "classified_as", "has_time_complexity", "has_memory_complexity", etc.
     properties: Dict[str, Any] = field(default_factory=dict)
-    confidence: float = 1.0  # Confidence score (0-1)
+    confidence: float = 1.0  # Overall confidence score (0-1)
     context: str = ""  # Original text context where relationship was found
+    
+    # Enhanced scoring components
+    proximity_score: float = 0.0  # Distance-based score (0-1)
+    frequency_score: float = 0.0  # Co-occurrence frequency score (0-1)
+    sentiment_score: float = 0.5  # Relationship sentiment: 0=negative, 0.5=neutral, 1=positive
+    
+    # Multi-document tracking
+    source_documents: List[str] = field(default_factory=list)  # Which documents mention this relationship
+    per_document_scores: Dict[str, float] = field(default_factory=dict)  # Score per document
+    
+    # Instance-specific applicability
+    instance_conditions: Dict[str, Any] = field(default_factory=dict)  
+    # Example: {"size": "large", "constraint_density": "high", "heuristic_quality": "good"}
     
     def __hash__(self):
         return hash((self.source, self.target, self.relation_type))
@@ -138,7 +156,8 @@ class KnowledgeGraph:
                     "id": node.id,
                     "name": node.name,
                     "type": node.type,
-                    "properties": node.properties
+                    "properties": node.properties,
+                    "performance_profiles": node.performance_profiles
                 }
                 for node in self.nodes.values()
             ],
@@ -149,6 +168,11 @@ class KnowledgeGraph:
                     "relation": edge.relation_type,
                     "properties": edge.properties,
                     "confidence": edge.confidence,
+                    "proximity_score": edge.proximity_score,
+                    "frequency_score": edge.frequency_score,
+                    "sentiment_score": edge.sentiment_score,
+                    "source_documents": edge.source_documents,
+                    "instance_conditions": edge.instance_conditions,
                     "context": edge.context[:100] if edge.context else ""
                 }
                 for edge in self.edges
@@ -176,7 +200,8 @@ class KnowledgeGraph:
                     "id": node.id,
                     "name": node.name,
                     "type": node.type,
-                    "properties": node.properties
+                    "properties": node.properties,
+                    "performance_profiles": node.performance_profiles
                 }
                 for node in self.nodes.values()
             ],
@@ -187,6 +212,12 @@ class KnowledgeGraph:
                     "relation_type": edge.relation_type,
                     "properties": edge.properties,
                     "confidence": edge.confidence,
+                    "proximity_score": edge.proximity_score,
+                    "frequency_score": edge.frequency_score,
+                    "sentiment_score": edge.sentiment_score,
+                    "source_documents": edge.source_documents,
+                    "per_document_scores": edge.per_document_scores,
+                    "instance_conditions": edge.instance_conditions,
                     "context": edge.context[:200] if edge.context else ""
                 }
                 for edge in self.edges

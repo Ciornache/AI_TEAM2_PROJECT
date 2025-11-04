@@ -326,6 +326,43 @@ class EnhancedEntityExtractor:
                 "category": "local_search",
                 "default_properties": {"complete": False, "optimal": False}
             },
+            
+            # Constraint-Based Algorithms
+            "backtracking": {
+                "name": "Backtracking",
+                "full_name": "Backtracking Search",
+                "aliases": ["backtracking", "backtrack", "back tracking", "cautare cu revenire"],
+                "category": "constraint_based",
+                "default_properties": {"complete": True, "optimal": False}
+            },
+            "forward_checking": {
+                "name": "Forward Checking",
+                "full_name": "Forward Checking",
+                "aliases": ["forward checking", "forward check", "verificare inainte"],
+                "category": "constraint_based",
+                "default_properties": {"complete": True, "optimal": False}
+            },
+            "arc_consistency": {
+                "name": "Arc Consistency",
+                "full_name": "Arc Consistency (AC-3)",
+                "aliases": ["arc consistency", "ac-3", "ac3", "consistenta arcelor"],
+                "category": "constraint_based",
+                "default_properties": {"complete": True, "optimal": False}
+            },
+            "min_conflicts": {
+                "name": "Min-Conflicts",
+                "full_name": "Min-Conflicts Heuristic",
+                "aliases": ["min conflicts", "min-conflicts", "minimum conflicts", "conflicte minime"],
+                "category": "constraint_based",
+                "default_properties": {"complete": False, "optimal": False}
+            },
+            "constraint_propagation": {
+                "name": "Constraint Propagation",
+                "full_name": "Constraint Propagation",
+                "aliases": ["constraint propagation", "propagare constrangeri", "propagation"],
+                "category": "constraint_based",
+                "default_properties": {"complete": True, "optimal": False}
+            },
         }
     
     def _init_problems(self) -> Dict[str, Dict]:
@@ -654,11 +691,18 @@ class CoOccurrenceAnalyzer:
         self.window_size = window_size
         self.co_occurrence_matrix: Dict[Tuple[str, str], int] = defaultdict(int)
         self.entity_counts: Dict[str, int] = defaultdict(int)
+        # NEW: Track actual distances for each co-occurrence
+        self.distance_tracking: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+        self.document_length: int = 0  # Track document length for normalization
     
     def build_matrix(self, mentions: List[EntityMention]):
         """Build co-occurrence matrix from mentions."""
         # Sort mentions by position
         sorted_mentions = sorted(mentions, key=lambda m: m.word_position)
+        
+        # Calculate document length (approximate from mentions)
+        if sorted_mentions:
+            self.document_length = max(m.word_position for m in sorted_mentions) + 100
         
         # Sliding window approach
         for i, mention1 in enumerate(sorted_mentions):
@@ -666,6 +710,10 @@ class CoOccurrenceAnalyzer:
             
             for j in range(i + 1, len(sorted_mentions)):
                 mention2 = sorted_mentions[j]
+                
+                # Skip self-references (same entity mentioned multiple times)
+                if mention1.entity_name == mention2.entity_name:
+                    continue
                 
                 # Check if within window
                 distance = mention2.word_position - mention1.word_position
@@ -677,9 +725,36 @@ class CoOccurrenceAnalyzer:
                 pair2 = (mention2.entity_name, mention1.entity_name)
                 self.co_occurrence_matrix[pair1] += 1
                 self.co_occurrence_matrix[pair2] += 1
+                
+                # NEW: Track actual distance
+                self.distance_tracking[pair1].append(distance)
+                self.distance_tracking[pair2].append(distance)
+    
+    def get_proximity_score(self, entity1: str, entity2: str) -> float:
+        """
+        Calculate proximity score based on average distance and document length.
+        Closer entities = higher score. Normalized to [0, 1].
+        """
+        distances = self.distance_tracking.get((entity1, entity2), [])
+        if not distances:
+            return 0.0
+        
+        avg_distance = sum(distances) / len(distances)
+        
+        # Normalize by document length
+        if self.document_length > 0:
+            normalized_distance = avg_distance / self.document_length
+        else:
+            normalized_distance = avg_distance / 1000  # Fallback
+        
+        # Inverse sigmoid: closer = higher score
+        # Score between 0 and 1
+        proximity_score = 1.0 / (1.0 + normalized_distance * 10)
+        
+        return proximity_score
     
     def get_co_occurrence_strength(self, entity1: str, entity2: str) -> float:
-        """Calculate normalized co-occurrence strength."""
+        """Calculate normalized co-occurrence strength (frequency score)."""
         co_count = self.co_occurrence_matrix.get((entity1, entity2), 0)
         if co_count == 0:
             return 0.0
@@ -707,6 +782,108 @@ class CoOccurrenceAnalyzer:
         return sorted(results, key=lambda x: x[2], reverse=True)
 
 
+class SentimentAnalyzer:
+    """Analyzes sentiment of relationships in context."""
+    
+    def __init__(self):
+        # Positive indicators
+        self.positive_patterns = [
+            r'\b(optimal|best|excellent|ideal|perfect|superior|efficient|effective)\b',
+            r'\b(works\s+well|suitable\s+for|recommended|preferred|guarantees?)\b',
+            r'\b(always|consistently|reliably|successfully)\b',
+            r'\b(fast|quick|rapid|swift|speedy)\b',
+            r'\b(better|improved|enhanced|superior)\b',
+        ]
+        
+        # Negative indicators
+        self.negative_patterns = [
+            r'\b(not\s+optimal|inefficient|poor|bad|unsuitable|inappropriate)\b',
+            r'\b(fails?|cannot|never|unable|impossible)\b',
+            r'\b(slow|sluggish|inefficient|wasteful)\b',
+            r'\b(worse|inferior|degraded)\b',
+            r'\b(does\s+not\s+work|doesn\'t\s+work|won\'t\s+work)\b',
+            r'\b(unlike|however|but|although)\s+.*\s+(not|no)\b',
+        ]
+        
+        # Conditional indicators (reduce confidence)
+        self.conditional_patterns = [
+            r'\b(if|when|only\s+if|provided\s+that|as\s+long\s+as|assuming)\b',
+            r'\b(depends?\s+on|conditional|sometimes|may|might|could)\b',
+            r'\b(unless|except|however)\b',
+        ]
+        
+        # Compile patterns
+        self.positive_regex = [re.compile(p, re.IGNORECASE) for p in self.positive_patterns]
+        self.negative_regex = [re.compile(p, re.IGNORECASE) for p in self.negative_patterns]
+        self.conditional_regex = [re.compile(p, re.IGNORECASE) for p in self.conditional_patterns]
+    
+    def analyze_sentiment(self, context: str) -> float:
+        """
+        Analyze sentiment of relationship in context.
+        Returns: 0.0 (negative) to 1.0 (positive), 0.5 = neutral
+        """
+        if not context:
+            return 0.5
+        
+        # Count pattern matches
+        pos_count = sum(1 for regex in self.positive_regex if regex.search(context))
+        neg_count = sum(1 for regex in self.negative_regex if regex.search(context))
+        cond_count = sum(1 for regex in self.conditional_regex if regex.search(context))
+        
+        # Calculate base sentiment
+        if pos_count > neg_count:
+            # Positive relationship
+            base_sentiment = 0.7 + (min(pos_count, 3) * 0.1)  # 0.7 to 1.0
+            # Reduce if conditional
+            sentiment = base_sentiment - (cond_count * 0.1)
+        elif neg_count > pos_count:
+            # Negative relationship
+            base_sentiment = 0.3 - (min(neg_count, 3) * 0.1)  # 0.3 to 0.0
+            sentiment = max(0.0, base_sentiment)
+        else:
+            # Neutral or balanced
+            sentiment = 0.5
+            # Conditionals make it more neutral
+            if cond_count > 0:
+                sentiment = 0.5
+        
+        # Clamp to [0, 1]
+        return max(0.0, min(1.0, sentiment))
+    
+    def extract_sentiment_context(self, full_text: str, entity1: str, entity2: str, window: int = 150) -> str:
+        """Extract context around both entities for sentiment analysis."""
+        entity1_lower = entity1.lower()
+        entity2_lower = entity2.lower()
+        
+        # Find all positions of both entities
+        positions = []
+        for match in re.finditer(r'\b' + re.escape(entity1_lower) + r'\b', full_text.lower()):
+            positions.append(('e1', match.start()))
+        for match in re.finditer(r'\b' + re.escape(entity2_lower) + r'\b', full_text.lower()):
+            positions.append(('e2', match.start()))
+        
+        # Sort by position
+        positions.sort(key=lambda x: x[1])
+        
+        # Find closest pair
+        min_distance = float('inf')
+        best_pos = None
+        for i, (type1, pos1) in enumerate(positions):
+            for type2, pos2 in positions[i+1:]:
+                if type1 != type2:  # Different entities
+                    distance = abs(pos2 - pos1)
+                    if distance < min_distance:
+                        min_distance = distance
+                        best_pos = (min(pos1, pos2), max(pos1, pos2))
+        
+        if best_pos:
+            start = max(0, best_pos[0] - window)
+            end = min(len(full_text), best_pos[1] + window)
+            return full_text[start:end]
+        
+        return ""
+
+
 class DocumentProcessorV5:
     """Enhanced document processor with pre-seeded KG and better relationship detection."""
     
@@ -721,6 +898,7 @@ class DocumentProcessorV5:
         
         self.extractor = EnhancedEntityExtractor()
         self.relationship_detector = RelationshipDetector()
+        self.sentiment_analyzer = SentimentAnalyzer()
         self.knowledge_graph = KnowledgeGraph()
         
         # Entity profiles
@@ -729,8 +907,12 @@ class DocumentProcessorV5:
         # Co-occurrence analyzer
         self.co_occurrence = CoOccurrenceAnalyzer(window_size=50)
         
-        # Pre-seed the knowledge graph
-        self._preseed_knowledge_graph()
+        # Store raw content for sentiment analysis
+        self.raw_content = ""
+        
+        # DISABLED: Pre-seeding removed - rely only on document parsing
+        # self._preseed_knowledge_graph()
+        print("[*] Pre-seeding DISABLED - using pure document parsing only")
     
     def _preseed_knowledge_graph(self):
         """Pre-seed KG with all known algorithms, problems, heuristics."""
@@ -793,13 +975,63 @@ class DocumentProcessorV5:
             self.knowledge_graph.add_node(node)
         
         # Add category nodes
-        for category in ["informed", "uninformed", "local_search"]:
+        for category in ["informed", "uninformed", "local_search", "constraint_based"]:
             node_id = f"cat_{category}"
             self.knowledge_graph.add_node(Node(
                 id=node_id,
                 name=category.replace('_', ' ').title(),
                 type="category"
             ))
+        
+        # Add time complexity nodes
+        time_complexities = {
+            "O(1)": {"description": "Constant Time", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(log n)": {"description": "Logarithmic Time", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(n)": {"description": "Linear Time", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(n log n)": {"description": "Linearithmic Time", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(n²)": {"description": "Quadratic Time", "suitable_for": {"small": True, "medium": True, "large": False}},
+            "O(n³)": {"description": "Cubic Time", "suitable_for": {"small": True, "medium": False, "large": False}},
+            "O(2^n)": {"description": "Exponential Time", "suitable_for": {"small": True, "medium": False, "large": False}},
+            "O(n!)": {"description": "Factorial Time", "suitable_for": {"small": True, "medium": False, "large": False}},
+            "O(b^d)": {"description": "Exponential in Depth", "suitable_for": {"small": True, "medium": False, "large": False}}
+        }
+        
+        for notation, info in time_complexities.items():
+            clean_notation = notation.replace('(', '').replace(')', '').replace('^', '_').replace(' ', '_')
+            node = Node(
+                id=f"time_{clean_notation}",
+                name=notation,
+                type="time_complexity",
+                properties={
+                    "description": info["description"],
+                    "notation": notation
+                },
+                performance_profiles=info["suitable_for"]
+            )
+            self.knowledge_graph.add_node(node)
+        
+        # Add memory complexity nodes
+        memory_complexities = {
+            "O(1)": {"description": "Constant Space", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(log n)": {"description": "Logarithmic Space", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(n)": {"description": "Linear Space", "suitable_for": {"small": True, "medium": True, "large": True}},
+            "O(n²)": {"description": "Quadratic Space", "suitable_for": {"small": True, "medium": True, "large": False}},
+            "O(b^d)": {"description": "Exponential Space", "suitable_for": {"small": True, "medium": False, "large": False}}
+        }
+        
+        for notation, info in memory_complexities.items():
+            clean_notation = notation.replace('(', '').replace(')', '').replace('^', '_').replace(' ', '_')
+            node = Node(
+                id=f"mem_{clean_notation}",
+                name=notation,
+                type="memory_complexity",
+                properties={
+                    "description": info["description"],
+                    "notation": notation
+                },
+                performance_profiles=info["suitable_for"]
+            )
+            self.knowledge_graph.add_node(node)
         
         # Add classification edges
         for algo_id, algo_info in self.extractor.algorithms.items():
@@ -813,6 +1045,7 @@ class DocumentProcessorV5:
                         target=cat_node_id,
                         relation_type="classified_as",
                         confidence=1.0,
+                        sentiment_score=1.0,
                         context="Pre-seeded classification"
                     ))
         
@@ -828,12 +1061,12 @@ class DocumentProcessorV5:
         
         # Step 1: Read document
         print("\n[1/7] Reading document...")
-        raw_content = self.reader.read(self.resource)
-        print(f"      Read {len(raw_content)} characters")
+        self.raw_content = self.reader.read(self.resource)
+        print(f"      Read {len(self.raw_content)} characters")
         
         # Step 2: Extract entity mentions
         print("\n[2/7] Extracting entity mentions...")
-        mentions = self.extractor.extract_mentions(raw_content)
+        mentions = self.extractor.extract_mentions(self.raw_content)
         print(f"      Found {len(mentions)} entity mentions")
         
         # Step 3: Build entity profiles
@@ -848,7 +1081,7 @@ class DocumentProcessorV5:
         # Step 5: Detect relationships using patterns
         print("\n[5/7] Detecting relationships with pattern matching...")
         entity_names = list(self.entity_profiles.keys())
-        detected_relationships = self.relationship_detector.detect_relationships(raw_content, entity_names)
+        detected_relationships = self.relationship_detector.detect_relationships(self.raw_content, entity_names)
         self._add_detected_relationships(detected_relationships)
         print(f"      Found {len(detected_relationships)} explicit relationships")
         
@@ -884,13 +1117,37 @@ class DocumentProcessorV5:
             profile.add_mention(mention)
     
     def _update_node_properties(self):
-        """Update pre-seeded nodes with properties discovered in document."""
+        """Create nodes from discovered entities and update their properties."""
         for entity_name, profile in self.entity_profiles.items():
+            # Try to find existing node
             node_id = self._find_node_id(entity_name, profile.entity_type)
-            if not node_id:
-                continue
             
-            node = self.knowledge_graph.get_node(node_id)
+            if not node_id:
+                # Node doesn't exist - create it from discovered entity
+                # Generate unique ID based on entity type
+                if profile.entity_type == 'algorithm':
+                    node_id = f"algo_{entity_name.lower().replace(' ', '_').replace('-', '_')}"
+                elif profile.entity_type == 'problem':
+                    node_id = f"prob_{entity_name.lower().replace(' ', '_').replace('-', '_')}"
+                elif profile.entity_type == 'heuristic':
+                    node_id = f"heur_{entity_name.lower().replace(' ', '_').replace('-', '_')}"
+                elif profile.entity_type == 'optimization':
+                    node_id = f"opt_{entity_name.lower().replace(' ', '_').replace('-', '_')}"
+                else:
+                    node_id = f"{profile.entity_type}_{entity_name.lower().replace(' ', '_').replace('-', '_')}"
+                
+                # Create new node
+                node = Node(
+                    id=node_id,
+                    name=entity_name,
+                    type=profile.entity_type,
+                    properties={}
+                )
+                self.knowledge_graph.add_node(node)
+                print(f"      [+] Created node: {entity_name} ({profile.entity_type})")
+            else:
+                node = self.knowledge_graph.get_node(node_id)
+            
             if node:
                 # Merge discovered properties (only if mentioned frequently)
                 total_mentions = profile.mention_count
@@ -899,7 +1156,7 @@ class DocumentProcessorV5:
                         node.properties[prop] = True
     
     def _add_detected_relationships(self, relationships: List[Tuple[str, str, str, str]]):
-        """Add explicitly detected relationships to KG."""
+        """Add explicitly detected relationships to KG with hybrid scoring."""
         for entity1, entity2, relation_type, context in relationships:
             profile1 = self.entity_profiles.get(entity1)
             profile2 = self.entity_profiles.get(entity2)
@@ -911,21 +1168,39 @@ class DocumentProcessorV5:
             target_id = self._find_node_id(entity2, profile2.entity_type)
             
             if source_id and target_id:
+                # Calculate scoring components
+                proximity = self.co_occurrence.get_proximity_score(entity1, entity2)
+                frequency = self.co_occurrence.get_co_occurrence_strength(entity1, entity2)
+                sentiment = self.sentiment_analyzer.analyze_sentiment(context)
+                
+                # Hybrid confidence score: 35% proximity + 30% frequency + 35% sentiment
+                confidence = (0.35 * proximity + 0.30 * frequency + 0.35 * sentiment)
+                # Boost explicit pattern matches
+                confidence = min(1.0, confidence + 0.1)
+                
                 edge = Edge(
                     source=source_id,
                     target=target_id,
                     relation_type=relation_type,
                     properties={"explicit": True, "pattern_matched": True},
-                    confidence=0.9,
+                    confidence=confidence,
+                    proximity_score=proximity,
+                    frequency_score=frequency,
+                    sentiment_score=sentiment,
+                    source_documents=[self.resource],
                     context=context[:200]
                 )
                 self.knowledge_graph.add_edge(edge)
     
     def _create_cooccurrence_edges(self):
-        """Create edges based on co-occurrence analysis."""
+        """Create edges based on co-occurrence analysis with hybrid scoring."""
         co_occurrences = self.co_occurrence.get_all_co_occurrences(min_strength=0.2)
         
         for entity1, entity2, strength in co_occurrences:
+            # Skip self-referential edges
+            if entity1 == entity2:
+                continue
+            
             profile1 = self.entity_profiles.get(entity1)
             profile2 = self.entity_profiles.get(entity2)
             
@@ -943,9 +1218,22 @@ class DocumentProcessorV5:
                 target_id = self._find_node_id(entity2, profile2.entity_type)
                 
                 if source_id and target_id:
-                    # Get context
-                    contexts = profile1.get_contexts_with(entity2, max_contexts=1)
-                    context = contexts[0] if contexts else ""
+                    # Additional safety check: skip if source == target
+                    if source_id == target_id:
+                        continue
+                    
+                    # Get context for sentiment analysis
+                    sentiment_context = self.sentiment_analyzer.extract_sentiment_context(
+                        self.raw_content, entity1, entity2
+                    )
+                    
+                    # Calculate scoring components
+                    proximity = self.co_occurrence.get_proximity_score(entity1, entity2)
+                    frequency = strength  # Already normalized
+                    sentiment = self.sentiment_analyzer.analyze_sentiment(sentiment_context)
+                    
+                    # Hybrid confidence score: 35% proximity + 30% frequency + 35% sentiment
+                    confidence = (0.35 * proximity + 0.30 * frequency + 0.35 * sentiment)
                     
                     edge = Edge(
                         source=source_id,
@@ -955,13 +1243,26 @@ class DocumentProcessorV5:
                             "co_occurrence_strength": strength,
                             "mention_count": self.co_occurrence.co_occurrence_matrix.get((entity1, entity2), 0)
                         },
-                        confidence=min(0.8, strength),
-                        context=context[:200]
+                        confidence=confidence,
+                        proximity_score=proximity,
+                        frequency_score=frequency,
+                        sentiment_score=sentiment,
+                        source_documents=[self.resource],
+                        context=sentiment_context[:200]
                     )
                     self.knowledge_graph.add_edge(edge)
     
     def _infer_relationships(self):
         """Post-processing phase: Infer additional relationships."""
+        # NEW: Add problem categorization
+        self._categorize_problems()
+        
+        # NEW: Add algorithm specialization
+        self._infer_algorithm_specialization()
+        
+        # NEW: Add same-document edges with distance scoring
+        self._add_same_document_edges()
+        
         # Transitivity: If A uses B and B solves C, then A can solve C
         self._infer_transitive_relationships()
         
@@ -970,6 +1271,195 @@ class DocumentProcessorV5:
         
         # Complexity relationships
         self._infer_complexity_relationships()
+    
+    def _categorize_problems(self):
+        """Categorize problems into domain categories."""
+        print("      [*] Categorizing problems...")
+        
+        # Define problem categories
+        problem_categories = {
+            'CSP': ['N-Queens', 'Graph Coloring', 'Sudoku', 'Map Coloring'],
+            'Puzzle': ['8-Puzzle', '15-Puzzle', 'Rubik\'s Cube'],
+            'Path Finding': ['Route Finding', 'Maze', 'Grid Navigation', 'Shortest Path'],
+            'Recursive': ['Tower of Hanoi', 'Fibonacci'],
+            'Tour/Traversal': ['Knight\'s Tour', 'Hamiltonian Path', 'TSP']
+        }
+        
+        created_count = 0
+        
+        for category_name, problem_names in problem_categories.items():
+            # Create category node
+            category_id = f"prob_cat_{category_name.lower().replace(' ', '_')}"
+            category_node = Node(
+                id=category_id,
+                name=category_name,
+                type="problem_category",
+                properties={"description": f"Problems in the {category_name} domain"}
+            )
+            self.knowledge_graph.add_node(category_node)
+            
+            # Link problems to category
+            for prob_name in problem_names:
+                # Find problem in graph
+                prob_node = None
+                for node_id, node in self.knowledge_graph.nodes.items():
+                    if node.type == "problem" and node.name.lower() == prob_name.lower():
+                        prob_node = node
+                        break
+                
+                if prob_node:
+                    # Create bidirectional edges
+                    self.knowledge_graph.add_edge(Edge(
+                        source=prob_node.id,
+                        target=category_id,
+                        relation_type="belongs_to_category",
+                        confidence=1.0,
+                        properties={"inferred": True}
+                    ))
+                    
+                    self.knowledge_graph.add_edge(Edge(
+                        source=category_id,
+                        target=prob_node.id,
+                        relation_type="contains_problem",
+                        confidence=1.0,
+                        properties={"inferred": True}
+                    ))
+                    created_count += 1
+        
+        print(f"      [+] Created {created_count} problem categorization edges")
+    
+    def _infer_algorithm_specialization(self):
+        """Link algorithms to problem types they specialize in."""
+        print("      [*] Inferring algorithm specializations...")
+        
+        # Define algorithm specializations (algorithm -> problem categories/types)
+        specializations = {
+            # Informed search specializes in puzzles and path finding
+            'A*': ['Puzzle', 'Path Finding'],
+            'IDA*': ['Puzzle'],
+            'GBFS': ['Puzzle', 'Path Finding'],
+            'RBFS': ['Puzzle'],
+            
+            # Uninformed search - general but good for specific cases
+            'BFS': ['Path Finding', 'Puzzle'],
+            'DFS': ['CSP', 'Tour/Traversal', 'Recursive'],
+            'UCS': ['Path Finding'],
+            'IDDFS': ['Puzzle', 'Path Finding'],
+            'Bidirectional Search': ['Path Finding'],
+            
+            # Backtracking specializes in CSP
+            'Backtracking': ['CSP', 'Tour/Traversal'],
+            
+            # Local search
+            'Simulated Annealing': ['CSP', 'Tour/Traversal'],
+            'Beam Search': ['Path Finding'],
+        }
+        
+        created_count = 0
+        
+        for algo_name, categories in specializations.items():
+            # Find algorithm node
+            algo_node = None
+            for node_id, node in self.knowledge_graph.nodes.items():
+                if node.type == "algorithm" and node.name == algo_name:
+                    algo_node = node
+                    break
+            
+            if not algo_node:
+                continue
+            
+            # Link to each specialized category
+            for category_name in categories:
+                category_id = f"prob_cat_{category_name.lower().replace(' ', '_')}"
+                
+                # Check if category exists
+                if category_id in self.knowledge_graph.nodes:
+                    self.knowledge_graph.add_edge(Edge(
+                        source=algo_node.id,
+                        target=category_id,
+                        relation_type="specializes_in",
+                        confidence=0.85,
+                        properties={"inferred": True, "reason": "domain_expertise"}
+                    ))
+                    created_count += 1
+        
+        print(f"      [+] Created {created_count} specialization edges")
+    
+    def _add_same_document_edges(self):
+        """Add edges between entities that appear in the same document with distance-based scoring."""
+        print("      [*] Adding same-document edges...")
+        
+        # Group entity profiles by document (all are from same doc in this processor)
+        entities_in_doc = list(self.entity_profiles.keys())
+        
+        if len(entities_in_doc) < 2:
+            print(f"      [+] Not enough entities to create same-document edges")
+            return
+        
+        created_count = 0
+        
+        # For each pair of entities
+        for i, entity1_name in enumerate(entities_in_doc):
+            profile1 = self.entity_profiles[entity1_name]
+            
+            for entity2_name in entities_in_doc[i+1:]:
+                # Skip if already processed or same entity
+                if entity1_name == entity2_name:
+                    continue
+                
+                profile2 = self.entity_profiles[entity2_name]
+                
+                # Calculate minimum distance between any mentions
+                min_distance = float('inf')
+                for mention1 in profile1.mentions:
+                    for mention2 in profile2.mentions:
+                        distance = abs(mention1.word_position - mention2.word_position)
+                        if distance < min_distance:
+                            min_distance = distance
+                
+                # Skip if distance is too large
+                if min_distance == float('inf') or min_distance > 200:  # Max distance threshold
+                    continue
+                
+                # Find node IDs
+                node1_id = self._find_node_id(entity1_name, profile1.entity_type)
+                node2_id = self._find_node_id(entity2_name, profile2.entity_type)
+                
+                if not node1_id or not node2_id or node1_id == node2_id:
+                    continue
+                
+                # Calculate distance-based score (closer = higher score)
+                # Normalize by document length
+                normalized_distance = min_distance / max(self.co_occurrence.document_length, 1000)
+                distance_score = 1.0 / (1.0 + normalized_distance * 10)  # 0 to 1
+                
+                # Infer relation type
+                relation_type = self._infer_relation_type(
+                    entity1_name, profile1.entity_type,
+                    entity2_name, profile2.entity_type
+                )
+                
+                if not relation_type:
+                    relation_type = "co_occurs_in_document"
+                
+                # Create edge
+                self.knowledge_graph.add_edge(Edge(
+                    source=node1_id,
+                    target=node2_id,
+                    relation_type=relation_type,
+                    confidence=distance_score,
+                    proximity_score=distance_score,
+                    properties={
+                        "min_distance": min_distance,
+                        "same_document": True,
+                        "document": self.resource
+                    },
+                    source_documents=[self.resource],
+                    context=f"Both entities appear in {self.resource}"
+                ))
+                created_count += 1
+        
+        print(f"      [+] Created {created_count} same-document edges")
     
     def _infer_transitive_relationships(self):
         """Infer transitive relationships (A uses B, B solves C => A can solve C)."""

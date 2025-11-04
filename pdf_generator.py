@@ -176,6 +176,92 @@ class PDFQuestionGenerator:
         doc.build(story)
         print(f"PDF generated: {output_path}")
     
+    def generate_pdf_single_problem(self, output_path: str, problem_name: str, n_instances: int = 2):
+        """Generate PDF with questions for a SINGLE problem."""
+        print(f"\n{'='*80}")
+        print(f"GENERATING PDF FOR: {problem_name}")
+        print(f"{'='*80}")
+        
+        # Create PDF document
+        doc = SimpleDocTemplate(
+            output_path,
+            pagesize=letter,
+            rightMargin=72,
+            leftMargin=72,
+            topMargin=72,
+            bottomMargin=18
+        )
+        
+        # Container for all content
+        story = []
+        
+        # Title page
+        story.append(Paragraph("AI Search Strategy Questions", self.styles['CustomTitle']))
+        story.append(Spacer(1, 0.2 * inch))
+        story.append(Paragraph(
+            f"Problem: {problem_name}",
+            self.styles['ProblemTitle']
+        ))
+        story.append(Spacer(1, 0.1 * inch))
+        story.append(Paragraph(
+            "Generated from Knowledge Graph Analysis",
+            self.styles['Normal']
+        ))
+        story.append(Spacer(1, 0.5 * inch))
+        
+        # Introduction
+        intro_text = f"""
+        This document contains {n_instances} instance(s) of the {problem_name} problem with questions 
+        about the most appropriate solving strategies. Each instance includes visualizations 
+        and detailed answers based on knowledge graph analysis.
+        """
+        story.append(Paragraph(intro_text, self.styles['Normal']))
+        story.append(PageBreak())
+        
+        # Map problem name to generator function
+        generator_map = {
+            'N-Queens': self._generate_n_queens_instances,
+            'Tower of Hanoi': self._generate_hanoi_instances,
+            'Graph Coloring': self._generate_graph_coloring_instances,
+            'Knight\'s Tour': self._generate_knight_tour_instances,
+            '8-Puzzle': self._generate_8puzzle_instances
+        }
+        
+        if problem_name not in generator_map:
+            raise ValueError(f"Unknown problem: {problem_name}. Must be one of {list(generator_map.keys())}")
+        
+        generator_func = generator_map[problem_name]
+        
+        # Generate instances
+        instances = generator_func(n_instances)
+        
+        for j, instance in enumerate(instances, 1):
+            # Instance heading
+            story.append(Paragraph(f"Instance {j}:", self.styles['InstanceTitle']))
+            
+            # Visualize instance
+            visualization = self._visualize_instance(instance)
+            story.extend(visualization)
+            story.append(Spacer(1, 0.15 * inch))
+            
+            # Question
+            question = self._generate_question(problem_name)
+            story.append(Paragraph(f"<b>Question:</b> {question}", self.styles['Question']))
+            story.append(Spacer(1, 0.15 * inch))
+            
+            # Generate answer from knowledge graph
+            answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
+            
+            # Answer section
+            story.append(Paragraph("Answer:", self.styles['AnswerHeading']))
+            story.extend(self._format_answer(answer))
+            
+            story.append(Spacer(1, 0.3 * inch))
+        
+        # Build PDF
+        doc.build(story)
+        print(f"PDF generated: {output_path}")
+    
     def _generate_n_queens_instances(self, n: int) -> List[ProblemInstance]:
         """Generate N-Queens instances."""
         instances = []

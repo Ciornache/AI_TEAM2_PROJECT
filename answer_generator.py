@@ -48,10 +48,11 @@ class AnswerGenerator:
         
         return None
     
-    def get_solving_algorithms(self, problem_name: str) -> List[Tuple[str, str, float]]:
+    def get_solving_algorithms(self, problem_name: str, instance_analysis: Dict = None) -> List[Tuple[str, str, float, Dict]]:
         """
         Get algorithms that solve this problem from KG.
-        Returns: [(algorithm_name, relation_type, confidence), ...]
+        Filter by instance characteristics if provided.
+        Returns: [(algorithm_name, relation_type, confidence, edge_scores), ...]
         """
         problem_node = self.find_problem_node(problem_name)
         if not problem_node:
@@ -62,16 +63,47 @@ class AnswerGenerator:
         # Find edges pointing to this problem (algorithm -> problem)
         if problem_node['id'] in self.edges_to:
             for edge in self.edges_to[problem_node['id']]:
-                if edge['relation_type'] == 'solves':
+                if edge['relation_type'] in ['solves', 'solved_by', 'applicable_to']:
                     algo_node = self.nodes_by_id.get(edge['source'])
                     if algo_node and algo_node['type'] == 'algorithm':
+                        # Check instance conditions if provided
+                        if instance_analysis and not self._edge_matches_instance(edge, instance_analysis):
+                            continue
+                        
+                        # Extract scoring components
+                        edge_scores = {
+                            'proximity': edge.get('proximity_score', 0.0),
+                            'frequency': edge.get('frequency_score', 0.0),
+                            'sentiment': edge.get('sentiment_score', 0.5),
+                            'confidence': edge.get('confidence', 1.0),
+                            'sources': edge.get('source_documents', [])
+                        }
+                        
                         algorithms.append((
                             algo_node['name'],
                             edge['relation_type'],
-                            edge.get('confidence', 1.0)
+                            edge.get('confidence', 1.0),
+                            edge_scores
                         ))
         
         return algorithms
+    
+    def _edge_matches_instance(self, edge: Dict, instance_analysis: Dict) -> bool:
+        """Check if edge conditions match instance characteristics."""
+        conditions = edge.get('instance_conditions', {})
+        
+        # No conditions = applies to all instances
+        if not conditions:
+            return True
+        
+        # Check size condition
+        if 'size' in conditions:
+            if conditions['size'] != instance_analysis.get('complexity_level'):
+                return False
+        
+        # Check other conditions (can be extended)
+        # For now, if conditions exist and size matches or no size specified, accept
+        return True
     
     def get_algorithm_properties(self, algorithm_name: str) -> Dict:
         """Get algorithm properties from KG."""
@@ -160,8 +192,8 @@ class AnswerGenerator:
         # Find algorithms from knowledge graph
         kg_algorithms = self._get_algorithms_from_kg()
         
-        # Get explicit solvers from knowledge graph
-        solving_algos = self.get_solving_algorithms(problem_name)
+        # Get explicit solvers from knowledge graph (instance-aware)
+        solving_algos = self.get_solving_algorithms(problem_name, instance_analysis)
         
         # Score and rank algorithms based on instance and KG
         recommendations = self._score_and_rank_algorithms(
@@ -371,7 +403,7 @@ class AnswerGenerator:
         kg_algorithms: List[Dict],
         explicit_solvers: List[Tuple]
     ) -> List[Dict]:
-        """Score and rank algorithms based on KG properties and instance."""
+        """Score and rank algorithms based on KG properties, edge scores, and instance."""
         scored_algorithms = []
         
         complexity_level = instance_analysis['complexity_level']
@@ -380,17 +412,48 @@ class AnswerGenerator:
         for algo in kg_algorithms:
             score = 0.0
             reasons = []
+            kg_scores = {}
             
             algo_name = algo['name']
             properties = algo['properties']
             category = algo.get('category', '')
             complexity = algo.get('complexity', {})
             
-            # Bonus for explicit KG link
-            is_explicit_solver = any(solver[0] == algo_name for solver in explicit_solvers)
-            if is_explicit_solver:
+            # NEW: Check if this algorithm has an edge to the problem
+            edge_info = None
+            for solver_tuple in explicit_solvers:
+                if solver_tuple[0] == algo_name:
+                    edge_info = solver_tuple[3] if len(solver_tuple) > 3 else {}
+                    break
+            
+            # NEW: Use edge scores if available
+            if edge_info:
+                # Major bonus for KG relationship
                 score += 30
-                reasons.append(f'✓ Found in knowledge graph as solver for {problem_name}')
+                kg_scores = edge_info
+                
+                # Weight by edge sentiment (positive relationship = higher score)
+                sentiment = edge_info.get('sentiment', 0.5)
+                sentiment_bonus = (sentiment - 0.5) * 20  # -10 to +10 based on sentiment
+                score += sentiment_bonus
+                
+                # Weight by edge proximity (closer mentions = more relevant)
+                proximity = edge_info.get('proximity', 0.0)
+                proximity_bonus = proximity * 15  # 0 to 15 based on proximity
+                score += proximity_bonus
+                
+                # Weight by frequency (more mentions = more evidence)
+                frequency = edge_info.get('frequency', 0.0)
+                frequency_bonus = frequency * 10  # 0 to 10 based on frequency
+                score += frequency_bonus
+                
+                reasons.append(f'✓ KG: Found as solver (conf: {edge_info.get("confidence", 0):.2f}, sent: {sentiment:.2f})')
+                
+                # Multi-document evidence
+                sources = edge_info.get('sources', [])
+                if len(sources) > 1:
+                    score += 5
+                    reasons.append(f'✓ Mentioned in {len(sources)} documents')
             
             # Optimality scoring
             if requires_optimality:
@@ -425,9 +488,12 @@ class AnswerGenerator:
                     reasons.append('⚠ Uninformed search inefficient for puzzles')
                     
             elif 'queens' in problem_lower or 'coloring' in problem_lower:
-                if algo_name == 'DFS':
+                if algo_name in ['DFS', 'Backtracking']:
                     score += 20
-                    reasons.append('✓ DFS perfect for CSP backtracking')
+                    reasons.append('✓ DFS/Backtracking perfect for CSP')
+                if category == 'constraint_based':
+                    score += 25
+                    reasons.append('✓ Constraint-based algorithm ideal for CSP')
                     
             elif 'hanoi' in problem_lower:
                 if algo_name == 'DFS':
@@ -455,7 +521,7 @@ class AnswerGenerator:
                     score += 10
                     reasons.append('✓ Space-efficient for large problems')
             
-            if score > 0 or is_explicit_solver:
+            if score > 0 or edge_info:
                 scored_algorithms.append({
                     'algorithm': algo_name,
                     'score': score,
@@ -464,6 +530,7 @@ class AnswerGenerator:
                     'properties': properties,
                     'complexity': complexity,
                     'category': category,
+                    'kg_scores': kg_scores,  # NEW: Include KG edge scores
                     'when_to_use': self._generate_when_to_use(algo_name, instance_analysis)
                 })
         

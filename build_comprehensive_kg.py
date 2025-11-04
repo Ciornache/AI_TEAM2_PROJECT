@@ -157,7 +157,7 @@ def process_all_sources():
 
 
 def merge_knowledge_graphs(kg1: KnowledgeGraph, kg2: KnowledgeGraph) -> KnowledgeGraph:
-    """Merge two knowledge graphs, combining nodes and edges."""
+    """Merge two knowledge graphs, combining nodes and edges with intelligent scoring."""
     merged = KnowledgeGraph()
     
     # Merge nodes (kg1 takes precedence, but merge properties)
@@ -166,15 +166,20 @@ def merge_knowledge_graphs(kg1: KnowledgeGraph, kg2: KnowledgeGraph) -> Knowledg
     
     for node_id, node in kg2.nodes.items():
         if node_id in merged.nodes:
-            # Merge properties
+            # Merge properties and performance profiles
             existing_node = merged.nodes[node_id]
             for prop, value in node.properties.items():
                 if prop not in existing_node.properties:
                     existing_node.properties[prop] = value
+            
+            # Merge performance profiles
+            for profile_key, profile_value in node.performance_profiles.items():
+                if profile_key not in existing_node.performance_profiles:
+                    existing_node.performance_profiles[profile_key] = profile_value
         else:
             merged.add_node(node)
     
-    # Merge edges (keep all, update confidence if duplicate)
+    # Merge edges with intelligent aggregation
     edge_map = {}
     
     for edge in kg1.edges:
@@ -184,9 +189,41 @@ def merge_knowledge_graphs(kg1: KnowledgeGraph, kg2: KnowledgeGraph) -> Knowledg
     for edge in kg2.edges:
         key = (edge.source, edge.target, edge.relation_type)
         if key in edge_map:
-            # Update confidence to max
+            # Edge exists in both KGs - merge intelligently
             existing_edge = edge_map[key]
-            existing_edge.confidence = max(existing_edge.confidence, edge.confidence)
+            
+            # Aggregate proximity scores (take maximum - closest distance wins)
+            existing_edge.proximity_score = max(
+                existing_edge.proximity_score,
+                edge.proximity_score
+            )
+            
+            # Aggregate frequency scores (sum - more mentions across docs)
+            existing_edge.frequency_score = min(1.0, 
+                existing_edge.frequency_score + edge.frequency_score * 0.5
+            )
+            
+            # Aggregate sentiment scores (weighted average, bias toward positive)
+            total_weight = len(existing_edge.source_documents) + 1
+            existing_edge.sentiment_score = (
+                existing_edge.sentiment_score * len(existing_edge.source_documents) +
+                edge.sentiment_score
+            ) / total_weight
+            
+            # Recalculate hybrid confidence
+            existing_edge.confidence = (
+                0.35 * existing_edge.proximity_score +
+                0.30 * existing_edge.frequency_score +
+                0.35 * existing_edge.sentiment_score
+            )
+            
+            # Merge source documents
+            if edge.source_documents:
+                existing_edge.source_documents.extend(edge.source_documents)
+            
+            # Merge per-document scores
+            if edge.per_document_scores:
+                existing_edge.per_document_scores.update(edge.per_document_scores)
             
             # Merge properties
             for prop, value in edge.properties.items():
@@ -196,6 +233,13 @@ def merge_knowledge_graphs(kg1: KnowledgeGraph, kg2: KnowledgeGraph) -> Knowledg
                     existing_edge.properties[prop] = max(existing_edge.properties.get(prop, 0), value)
                 elif prop not in existing_edge.properties:
                     existing_edge.properties[prop] = value
+            
+            # Merge instance conditions
+            if edge.instance_conditions:
+                if not existing_edge.instance_conditions:
+                    existing_edge.instance_conditions = edge.instance_conditions.copy()
+                else:
+                    existing_edge.instance_conditions.update(edge.instance_conditions)
         else:
             edge_map[key] = edge
     
