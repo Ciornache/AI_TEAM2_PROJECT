@@ -8,6 +8,7 @@
         "optimal": true,
         "complete": true,
         "category": true,
+        "consistent": true,
         "guaranteed": true
       }
     },
@@ -53,9 +54,10 @@
       "properties": {
         "complete": true,
         "category": true,
-        "optimal": true,
+        "consistent": true,
         "fast": true,
-        "slow": true
+        "slow": true,
+        "optimal": true
       }
     },
     {
@@ -168,6 +170,63 @@
       }
     },
     {
+      "id": "algo_hill_climbing",
+      "name": "Hill Climbing",
+      "type": "algorithm",
+      "properties": {
+        "complete": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_simulated_annealing",
+      "name": "Simulated Annealing",
+      "type": "algorithm",
+      "properties": {
+        "complete": true,
+        "category": true,
+        "fast": true,
+        "slow": true
+      }
+    },
+    {
+      "id": "algo_forward_checking",
+      "name": "Forward Checking",
+      "type": "algorithm",
+      "properties": {
+        "complete": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_arc_consistency",
+      "name": "Arc Consistency",
+      "type": "algorithm",
+      "properties": {
+        "consistent": true,
+        "complete": true,
+        "category": true
+      }
+    },
+    {
+      "id": "algo_min_conflicts",
+      "name": "Min-Conflicts",
+      "type": "algorithm",
+      "properties": {
+        "complete": true,
+        "category": true,
+        "consistent": true
+      }
+    },
+    {
+      "id": "prob_sudoku",
+      "name": "Sudoku",
+      "type": "problem",
+      "properties": {
+        "category": true
+      }
+    },
+    {
       "id": "algo_bfs",
       "name": "BFS",
       "type": "algorithm",
@@ -185,50 +244,11 @@
       "name": "Bidirectional Search",
       "type": "algorithm",
       "properties": {
+        "fast": true,
         "complete": true,
         "optimal": true,
         "category": true,
-        "fast": true,
         "efficient": true
-      }
-    },
-    {
-      "id": "algo_simulated_annealing",
-      "name": "Simulated Annealing",
-      "type": "algorithm",
-      "properties": {
-        "category": true,
-        "fast": true,
-        "slow": true
-      }
-    },
-    {
-      "id": "algo_beam_search",
-      "name": "Beam Search",
-      "type": "algorithm",
-      "properties": {
-        "category": true,
-        "fast": true,
-        "slow": true,
-        "guaranteed": true
-      }
-    },
-    {
-      "id": "prob_tower_of_hanoi",
-      "name": "Tower of Hanoi",
-      "type": "problem",
-      "properties": {
-        "category": true,
-        "consistent": true
-      }
-    },
-    {
-      "id": "prob_graph_coloring",
-      "name": "Graph Coloring",
-      "type": "problem",
-      "properties": {
-        "complete": true,
-        "category": true
       }
     },
     {
@@ -254,10 +274,31 @@
       }
     },
     {
-      "id": "prob_n_queens",
-      "name": "N-Queens",
+      "id": "algo_beam_search",
+      "name": "Beam Search",
+      "type": "algorithm",
+      "properties": {
+        "fast": true,
+        "category": true,
+        "slow": true,
+        "guaranteed": true
+      }
+    },
+    {
+      "id": "prob_tower_of_hanoi",
+      "name": "Tower of Hanoi",
       "type": "problem",
       "properties": {
+        "consistent": true,
+        "category": true
+      }
+    },
+    {
+      "id": "prob_graph_coloring",
+      "name": "Graph Coloring",
+      "type": "problem",
+      "properties": {
+        "complete": true,
         "category": true
       }
     },
@@ -302,17 +343,333 @@
         "optimal": true,
         "category": true
       }
+    },
+    {
+      "id": "prob_n_queens",
+      "name": "N-Queens",
+      "type": "problem",
+      "properties": {
+        "category": true
+      }
     }
   ],
   "edges": [
     {
-      "source": "prob_cat_puzzle",
-      "target": "prob_8_puzzle",
-      "relation_type": "contains_problem",
+      "source": "prob_8_puzzle",
+      "target": "prob_n_queens",
+      "relation_type": "related_to",
       "properties": {
-        "inferred": true
+        "co_occurrence_strength": 0.6172133998483676,
+        "mention_count": 4
+      },
+      "confidence": 0.6747285478881526,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
       },
       "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_sma*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_ida*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "heur_manhattan_distance",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.6985885174820743,
+      "context": ""
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_bidirectional_search",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "heur_manhattan_distance",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 6,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9766081871345029,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "prob_cat_csp",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 14,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9911872088631499,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_a*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 61,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.5245560065964734,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 15,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.943502824858757,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "prob_cat_puzzle",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 5,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9968346416814383,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "heur_euclidean_distance",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7211320343559642,
+      "context": ""
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 172,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.37590711175616837,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 16,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.4885653871177619,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.23570226039551587,
+        "mention_count": 1
+      },
+      "confidence": 0.5571671612447648,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.6329931618554523,
+        "mention_count": 8
+      },
+      "confidence": 0.8801994067237968,
+      "context": " \n•describe the transitions and validate them \n•specify a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "prob_cat_csp",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "heur_euclidean_distance",
+      "relation_type": "uses",
+      "properties": {
+        "min_distance": 54,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9668426869704041,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 83,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9499276061776062,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "prob_route_finding",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 6,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9766081871345029,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "opt_pruning",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.7948075646980757,
       "context": ""
     },
     {
@@ -327,6 +684,99 @@
       "context": ""
     },
     {
+      "source": "algo_backtracking",
+      "target": "prob_cat_tour/traversal",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 171,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.37727603787327024,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 4,
+        "min_distance": 43,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.8156960929772503,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "prob_cat_puzzle",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.008316044185609,
+        "mention_count": 27
+      },
+      "confidence": 0.8193453656098257,
+      "context": "se verific˘ a dac˘ a fiecare stare urm˘ atoare este\nconsistent˘ a, ˆ ınainte de a fi ad˘ augat˘ a.\nFII, UAIC Curs 4 IA 2025/2026 21 / 60\nBacktracking\nBacktracking = DFS + ordonarea variabilelor + fail"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "prob_cat_tour/traversal",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_a*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 127,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.49455815841354517,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
       "source": "prob_8_puzzle",
       "target": "heur_manhattan_distance",
       "relation_type": "related_to",
@@ -338,104 +788,8 @@
       "context": ""
     },
     {
-      "source": "algo_iddfs",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 11,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf",
-        "co_occurrence_strength": 1.414213562373095,
-        "mention_count": 6
-      },
-      "confidence": 0.8234509357612545,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.6329931618554523,
-        "mention_count": 6,
-        "min_distance": 3,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8243344320486814,
-      "context": ""
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 173,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.37454808387563265,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.414213562373095,
-        "mention_count": 6
-      },
-      "confidence": 0.8874103942652329,
-      "context": ", piece, tower); \n}\n}\n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening \n○Backtracking \n○Bidirectional \n●Informed - heuristi"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.1547005383792517,
-        "mention_count": 6
-      },
-      "confidence": 0.8451994067237968,
-      "context": ""
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_iddfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.4833333333333334,
-        "mention_count": 91
-      },
-      "confidence": 0.8669216689402675,
-      "context": ""
-    },
-    {
-      "source": "prob_tower_of_hanoi",
-      "target": "prob_graph_coloring",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 23,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.8568761667703796,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
       "source": "algo_gbfs",
-      "target": "algo_a*",
+      "target": "algo_ucs",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -446,60 +800,15 @@
     },
     {
       "source": "algo_ucs",
-      "target": "prob_8_puzzle",
-      "relation_type": "solves",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
       "properties": {
-        "min_distance": 21,
+        "min_distance": 133,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
       },
-      "confidence": 0.9226519337016574,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_cat_csp",
-      "target": "prob_graph_coloring",
-      "relation_type": "contains_problem",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 1.0,
-      "context": ""
-    },
-    {
-      "source": "algo_ida*",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "heur_euclidean_distance",
-      "relation_type": "uses",
-      "properties": {
-        "min_distance": 80,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9516499456061889,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_ida*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 0,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 1.0,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+      "confidence": 0.5086811968969338,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
     },
     {
       "source": "algo_bfs",
@@ -508,14 +817,92 @@
       "properties": {
         "min_distance": 148,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+        "document": "Knowledge Source/Unit-3.pdf"
       },
       "confidence": 0.9140833623592245,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
     },
     {
-      "source": "algo_ida*",
+      "source": "algo_bfs",
+      "target": "prob_8_puzzle",
+      "relation_type": "solves",
+      "properties": {
+        "co_occurrence_strength": 0.24618298195866545,
+        "mention_count": 2
+      },
+      "confidence": 0.6437226194553245,
+      "context": "f\nf(n)<C\nf(n)=C\nf(n)>C\nf(n)>C∗\nC∗\n4 9\nILLUSTRATION: WHY IS A* OPTIMAL? ILLUSTRATION: WHY IS A* OPTIMAL?\nA* gradually adds “ -contours” of nodes (cf . BFS adds lay ers)\nCont our  has all nodes with , w"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "heur_manhattan_distance",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.6771919475486325,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "prob_8_puzzle",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 4,
+        "same_document": true,
+        "document": "Knowledge Source/lecture2.pdf"
+      },
+      "confidence": 0.9892588614393125,
+      "context": "Both entities appear in Knowledge Source/lecture2.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 3
+      },
+      "confidence": 0.7733990414515707,
+      "context": "ions and validate them \n•specify a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening \n○Backtracking \n○Bidir"
+    },
+    {
+      "source": "algo_ucs",
       "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_tower_of_hanoi",
+      "target": "prob_cat_recursive",
+      "relation_type": "belongs_to_category",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 60,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.6332518337408313,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bfs",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -525,37 +912,37 @@
       "context": "Both algorithms guarantee optimal solutions"
     },
     {
-      "source": "algo_rbfs",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
+      "source": "algo_gbfs",
+      "target": "algo_ida*",
+      "relation_type": "comparable_optimality",
       "properties": {
-        "min_distance": 83,
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 192,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
       },
-      "confidence": 0.9499276061776062,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+      "confidence": 0.35047361299052776,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
     },
     {
-      "source": "algo_ucs",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
+      "source": "algo_rbfs",
+      "target": "prob_cat_puzzle",
+      "relation_type": "specializes_in",
       "properties": {
-        "co_occurrence_strength": 0.7071067811865475,
-        "mention_count": 2
+        "inferred": true,
+        "reason": "domain_expertise"
       },
-      "confidence": 0.7030547788507893,
-      "context": ""
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 2.0,
-        "mention_count": 10
-      },
-      "confidence": 0.8737284482758619,
+      "confidence": 0.85,
       "context": ""
     },
     {
@@ -570,256 +957,38 @@
       "context": ""
     },
     {
-      "source": "algo_bfs",
-      "target": "algo_sma*",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.5773502691896258,
-        "mention_count": 1
-      },
-      "confidence": 0.641570776549768,
-      "context": ""
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 4
-      },
-      "confidence": 0.8112499999999999,
-      "context": " Iterative Deepening \n○Backtracking \n○Bidirectional \n●Informed - heuristics to help distinguish between states \n○Greedy best-first \n○Hillclimbing and Simulated Annealing \n○Beam \n○A* and IDA* \n\nBreadth"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 26,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.49208860759493667,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_iddfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_beam_search",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 168,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.38144329896907214,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "prob_cat_csp",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 2.0,
-        "mention_count": 10
-      },
-      "confidence": 0.8115572625698324,
-      "context": ""
-    },
-    {
-      "source": "algo_beam_search",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 16,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.4885653871177619,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 184,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.36022253129346316,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "co_occurrence_strength": 0.31622776601683794,
-        "mention_count": 2
-      },
-      "confidence": 0.6123641349134972,
-      "context": ""
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_iddfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 5,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9968346416814383,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_ida*",
-      "target": "algo_rbfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "opt_memoization",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.22941573387056174,
-        "mention_count": 1
-      },
-      "confidence": 0.5836804182371429,
-      "context": ""
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 174,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.37319884726224783,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 154,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9109105634617609,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "algo_ucs",
-      "relation_type": "solved_by",
-      "properties": {
-        "co_occurrence_strength": 0.8164965809277261,
-        "mention_count": 2
-      },
-      "confidence": 0.7297546279885652,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_a*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 127,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.49455815841354517,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
       "source": "algo_ucs",
-      "target": "heur_euclidean_distance",
+      "target": "heur_misplaced_tiles",
       "relation_type": "uses",
       "properties": {
-        "min_distance": 57,
+        "min_distance": 25,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
+        "document": "Knowledge Source/ai-lecture03.pdf"
       },
-      "confidence": 0.8146341463414634,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
+      "confidence": 0.9092558983666061,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
     },
     {
-      "source": "algo_dfs",
+      "source": "algo_bfs",
       "target": "algo_rbfs",
       "relation_type": "related_to",
       "properties": {
-        "min_distance": 14,
+        "min_distance": 13,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+        "document": "Knowledge Source/Unit-3.pdf"
       },
-      "confidence": 0.9911872088631499,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+      "confidence": 0.9918115394305872,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "prob_n_queens",
+      "target": "prob_cat_csp",
+      "relation_type": "belongs_to_category",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 1.0,
+      "context": ""
     },
     {
       "source": "heur_euclidean_distance",
@@ -833,8 +1002,1127 @@
       "context": ""
     },
     {
+      "source": "algo_bfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.1547005383792517,
+        "mention_count": 48
+      },
+      "confidence": 0.8433927006135946,
+      "context": "en you find the \ngoal state! Keep looking until all \nstates with better scores have \nbeen explored. \nA \nB 5\n3h(A) = 1 \nreal = 4 \nh(B) = 4 \nreal = 4 \n\nBFS/IDDFS \nA*\n\nOptimizing A* \nConsistent heuristic"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 4,
+        "min_distance": 42,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.8742401748525711,
+      "context": " \n•describe the transitions and validate them \n•specify a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 168,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.38144329896907214,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "co_occurrence_strength": 0.31622776601683794,
+        "mention_count": 2
+      },
+      "confidence": 0.6123641349134972,
+      "context": ""
+    },
+    {
+      "source": "prob_cat_csp",
+      "target": "prob_graph_coloring",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 1.0,
+      "context": ""
+    },
+    {
+      "source": "prob_tower_of_hanoi",
+      "target": "prob_graph_coloring",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 23,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.8568761667703796,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_ida*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 145,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9156780646662015,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 11,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf",
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 6
+      },
+      "confidence": 0.8234509357612545,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_dls",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 71,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9568546426835197,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "algo_a*",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 4
+      },
+      "confidence": 1.1073556370302475,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2,
+        "min_distance": 50,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.8142281176905084,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 154,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9109105634617609,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_forward_checking",
+      "target": "algo_arc_consistency",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.4558423058385518,
+        "mention_count": 4
+      },
+      "confidence": 0.6327498154332529,
+      "context": "a s ,i numai dac˘ a\npentru fiecare valoare xa lui X, exist˘ a ovaloare permis˘ a ypentru Y\nDaca Xpierde o valoare, vecinii lui Xtrebuie verificat ,i.\nArc consistency detecteaz˘ a es ,ecul mai devreme "
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 127,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.44926279271465736,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
       "source": "algo_rbfs",
       "target": "algo_bidirectional_search",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_ida*",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "algo_dfs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 0.2581988897471611,
+        "mention_count": 2
+      },
+      "confidence": 0.5927605378663494,
+      "context": "DOMIN ATING HEURISTICS DOMIN ATING HEURISTICS\nIf (admissible)  for all , \nthen  dominat es  and is be tter for se arch.\nTypic al se arch c osts (f or 8-puzzle):\ndepth = 14 DFS  ≈  3,000,000 nodes  \nA*"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 198,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.41018766756032177,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8944271909999159,
+        "mention_count": 34
+      },
+      "confidence": 0.8432275270432217,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_a*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 147,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9146143122676579,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 173,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.37454808387563265,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.1547005383792517,
+        "mention_count": 6
+      },
+      "confidence": 0.8451994067237968,
+      "context": "get to the goal \nstate. \nNo more local optimum. \nSlower than hillclimbing. \nhttp://www.cse.iitm.ac.in/~vplab/courses/optimization/SA_SEL_SLIDES.pdf \n\nBeam search \nBFS but only keeps in a sorted list b"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "heur_euclidean_distance",
+      "target": "prob_route_finding",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.6886905176500915,
+      "context": ""
+    },
+    {
+      "source": "prob_cat_recursive",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_arc_consistency",
+      "target": "algo_min_conflicts",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 24,
+        "same_document": true,
+        "document": "Knowledge Source/curs_CSP.pdf"
+      },
+      "confidence": 0.9331103678929766,
+      "context": "Both entities appear in Knowledge Source/curs_CSP.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7131997238879487,
+        "mention_count": 25
+      },
+      "confidence": 0.8202618705192739,
+      "context": ""
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "opt_memoization",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 47,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9710162802170695,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "opt_caching",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 85,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.7466467958271237,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_ida*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 2,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9987314474184955,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 147,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf",
+        "co_occurrence_strength": 2.041241452319315,
+        "mention_count": 5
+      },
+      "confidence": 0.7813890654799744,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "heur_euclidean_distance",
+      "relation_type": "uses",
+      "properties": {
+        "co_occurrence_strength": 0.5163977794943222,
+        "mention_count": 5
+      },
+      "confidence": 0.6965593172737987,
+      "context": ""
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8660254037844387,
+        "mention_count": 5
+      },
+      "confidence": 0.8035276073619633,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_iddfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.23570226039551587,
+        "mention_count": 1
+      },
+      "confidence": 0.5809879247725744,
+      "context": ""
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 4
+      },
+      "confidence": 0.8112499999999999,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.6324555320336759,
+        "mention_count": 7
+      },
+      "confidence": 0.8183712121212121,
+      "context": ""
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "prob_8_puzzle",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8128612716763006,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "prob_cat_tour/traversal",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 76,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf",
+        "co_occurrence_strength": 1.0,
+        "mention_count": 9
+      },
+      "confidence": 0.823583175205566,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 4
+      },
+      "confidence": 0.8400486381322957,
+      "context": "ne found - most common \n●Best one (greedy) \n●All, in the order they were found, choosing next state available if stuck \n(hillclimbing-backtracking) \n\nSimulated annealing \nHillclimbing, but allows choo"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 192,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.4176524112829845,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8660254037844387,
+        "mention_count": 32
+      },
+      "confidence": 0.8196376086548682,
+      "context": ""
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_min_conflicts",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 48,
+        "same_document": true,
+        "document": "Knowledge Source/curs_CSP.pdf"
+      },
+      "confidence": 0.8746081504702194,
+      "context": "Both entities appear in Knowledge Source/curs_CSP.pdf"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 193,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.8908124009957004,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_min_conflicts",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 2
+      },
+      "confidence": 0.7297031376407286,
+      "context": "e c˘ autare\nStructura grafului de restrict ,ii\nC˘ autare local˘ a\nFII, UAIC Curs 4 IA 2025/2026 53 / 60\nAlgoritmi euristici pentru CSP\nHill-climbing ,Simulated annealing lucreaz˘ a cu st˘ ari ”complet"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "algo_ucs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 1.2247448713915892,
+        "mention_count": 3
+      },
+      "confidence": 0.8553621883657219,
+      "context": ""
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 174,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.37319884726224783,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "algo_ucs",
+      "relation_type": "used_by",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 2
+      },
+      "confidence": 0.782092819614711,
+      "context": ""
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_cat_csp",
+      "target": "prob_n_queens",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 1.0,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "heur_euclidean_distance",
+      "relation_type": "uses",
+      "properties": {
+        "min_distance": 57,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.8146341463414634,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 10
+      },
+      "confidence": 0.8115572625698324,
+      "context": ""
+    },
+    {
+      "source": "algo_hill_climbing",
+      "target": "algo_min_conflicts",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.6559256689921817,
+      "context": ""
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 2
+      },
+      "confidence": 0.7597745556736666,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 183,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.36147941381716675,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 126,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.45121951219512196,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_bidirectional_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.9805806756909202,
+        "mention_count": 10
+      },
+      "confidence": 0.9207406723337381,
+      "context": "r than DFS and needs less space than BFS. But the main drawback of IDDFS is that it repeats all the work from the previous phase.\n\n The advantage of Bidirectional search (BS) is that it uses various "
+    },
+    {
+      "source": "algo_sma*",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 187,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.35650378527185134,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "prob_cat_recursive",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 2
+      },
+      "confidence": 0.7658195258395495,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_sma*",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5773502691896258,
+        "mention_count": 1
+      },
+      "confidence": 0.641570776549768,
+      "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "prob_8_puzzle",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 35,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.8774080560420315,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_arc_consistency",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 24,
+        "same_document": true,
+        "document": "Knowledge Source/curs_CSP.pdf"
+      },
+      "confidence": 0.9331103678929766,
+      "context": "Both entities appear in Knowledge Source/curs_CSP.pdf"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "prob_cat_path_finding",
+      "relation_type": "belongs_to_category",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "opt_memoization",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 30,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9813037517138228,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "heur_misplaced_tiles",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 2,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9920792079207921,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.5803810000880093,
+        "mention_count": 16
+      },
+      "confidence": 0.799183487929477,
+      "context": "DFS\n3.4  Iterative Deepening Depth First search (IDDFS )\n      3.4.1  Time and space complexity of IDDFS\n      3.4.2  Advantages and Disadvantages of IDDFS\n3.5   Bidirectional search\n3.6   Comparison "
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_a*",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 129,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.4453998280309544,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 1,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.5224765681326604,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "prob_cat_puzzle",
+      "target": "prob_8_puzzle",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_8_puzzle",
+      "target": "heur_euclidean_distance",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 16,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9399624765478425,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 109,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9352577809455928,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "heur_euclidean_distance",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 7,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9728155339805824,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "opt_caching",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 76,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.7672281776416539,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_beam_search",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 128,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.44732297063903276,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 6
+      },
+      "confidence": 0.8874103942652329,
+      "context": "tions: \n●First one found - most common \n●Best one (greedy) \n●All, in the order they were found, choosing next state available if stuck \n(hillclimbing-backtracking) \n\nSimulated annealing \nHillclimbing,"
+    },
+    {
+      "source": "algo_hill_climbing",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 2
+      },
+      "confidence": 0.9466699388571997,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.7906188605108055,
+      "context": ""
+    },
+    {
+      "source": "prob_cat_csp",
+      "target": "prob_sudoku",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 1.0,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
+      },
+      "confidence": 0.8545375722543352,
+      "context": "get to the goal \nstate. \nNo more local optimum. \nSlower than hillclimbing. \nhttp://www.cse.iitm.ac.in/~vplab/courses/optimization/SA_SEL_SLIDES.pdf \n\nBeam search \nBFS but only keeps in a sorted list b"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_dls",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -854,160 +2142,7 @@
       "context": ""
     },
     {
-      "source": "algo_backtracking",
-      "target": "prob_cat_tour/traversal",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8164965809277261,
-        "mention_count": 4,
-        "min_distance": 43,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8156960929772503,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 88,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.5407098121085595,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "prob_cat_tour/traversal",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_beam_search",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 191,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.4189230301186492,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_a*",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
       "source": "algo_bfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 186,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.3577348066298343,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 192,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.35047361299052776,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8164965809277261,
-        "mention_count": 4,
-        "min_distance": 42,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8381360182290396,
-      "context": "r; \nIf (Validate (s, piece, tower)) \ns = Transition(s, piece, tower); \n}\n}\n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
       "target": "prob_cat_puzzle",
       "relation_type": "specializes_in",
       "properties": {
@@ -1018,86 +2153,66 @@
       "context": ""
     },
     {
-      "source": "algo_iddfs",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.5803810000880093,
-        "mention_count": 16
-      },
-      "confidence": 0.799183487929477,
-      "context": "DFS\n3.4  Iterative Deepening Depth First search (IDDFS )\n      3.4.1  Time and space complexity of IDDFS\n      3.4.2  Advantages and Disadvantages of IDDFS\n3.5   Bidirectional search\n3.6   Comparison "
-    },
-    {
-      "source": "algo_bfs",
-      "target": "opt_memoization",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 23,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9856034051076615,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 14,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.5216539196940726,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "prob_cat_recursive",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "contains_problem",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
+      "source": "algo_gbfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
-        "reason": "domain_expertise"
+        "reason": "both_optimal"
       },
       "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
+      "context": "Both algorithms guarantee optimal solutions"
     },
     {
       "source": "algo_gbfs",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "uses",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
       "properties": {
-        "co_occurrence_strength": 0.23570226039551587,
+        "min_distance": 9,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.5035276073619632,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 190,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.3528610354223433,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "opt_memoization",
+      "target": "algo_rbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.22941573387056174,
         "mention_count": 1
       },
-      "confidence": 0.5571671612447648,
+      "confidence": 0.5836804182371429,
       "context": ""
     },
     {
-      "source": "algo_backtracking",
-      "target": "algo_bidirectional_search",
+      "source": "algo_beam_search",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 191,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.4189230301186492,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_sma*",
+      "target": "algo_ucs",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -1107,54 +2222,65 @@
       "context": "Both algorithms guarantee optimal solutions"
     },
     {
-      "source": "algo_ucs",
-      "target": "algo_dls",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 71,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9568546426835197,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "prob_8_puzzle",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 35,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.8774080560420315,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_bfs",
+      "source": "algo_dfs",
       "target": "opt_pruning",
       "relation_type": "can_use",
       "properties": {
-        "min_distance": 86,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
+        "co_occurrence_strength": 0.8944271909999159,
+        "mention_count": 4
       },
-      "confidence": 0.5140194389763779,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
+      "confidence": 0.8186214252960211,
+      "context": ""
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_gbfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_dls",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.2946278254943948,
+        "mention_count": 5
+      },
+      "confidence": 0.7164431663927924,
+      "context": " is that it repeats all the work from the previous phase.\n\n The advantage of Bidirectional search (BS) is that it uses various techniques \nlike DFS, BFS, DLS, etc, so it is efficient and requires les"
     },
     {
       "source": "algo_dfs",
-      "target": "algo_simulated_annealing",
+      "target": "algo_gbfs",
       "relation_type": "related_to",
       "properties": {
-        "co_occurrence_strength": 0.6324555320336759,
-        "mention_count": 4
+        "co_occurrence_strength": 1.4142135623730951,
+        "mention_count": 9,
+        "min_distance": 9,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
       },
-      "confidence": 0.8648859349437323,
-      "context": "ece, tower)) \ns = Transition(s, piece, tower); \n}\n}\n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening \n○Backtracking \n○Bidir"
+      "confidence": 0.8230108613286182,
+      "context": ""
     },
     {
-      "source": "algo_iddfs",
+      "source": "algo_gbfs",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.414213562373095,
+        "mention_count": 6
+      },
+      "confidence": 0.8080684174153421,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
       "target": "algo_a*",
       "relation_type": "comparable_optimality",
       "properties": {
@@ -1165,8 +2291,8 @@
       "context": "Both algorithms guarantee optimal solutions"
     },
     {
-      "source": "algo_gbfs",
-      "target": "algo_rbfs",
+      "source": "algo_a*",
+      "target": "algo_ida*",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -1177,52 +2303,211 @@
     },
     {
       "source": "algo_dfs",
+      "target": "opt_memoization",
+      "relation_type": "can_use",
+      "properties": {
+        "co_occurrence_strength": 0.21081851067789195,
+        "mention_count": 2
+      },
+      "confidence": 0.5857078821864077,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_ida*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "prob_sudoku",
+      "target": "prob_cat_csp",
+      "relation_type": "belongs_to_category",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 1.0,
+      "context": ""
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "prob_cat_csp",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "algo_ida*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 0,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 1.0,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_a*",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 1,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.9904397705544932,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_sma*",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 189,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.354066985645933,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "prob_cat_path_finding",
+      "target": "prob_route_finding",
+      "relation_type": "contains_problem",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_bfs",
       "target": "algo_ucs",
       "relation_type": "related_to",
       "properties": {
-        "min_distance": 184,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
+        "co_occurrence_strength": 1.2060453783110545,
+        "mention_count": 16
       },
-      "confidence": 0.5243344320486815,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "opt_pruning",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 2
-      },
-      "confidence": 0.7948075646980757,
+      "confidence": 0.8227912406916571,
       "context": ""
     },
     {
       "source": "algo_ucs",
-      "target": "heur_manhattan_distance",
-      "relation_type": "uses",
-      "properties": {
-        "co_occurrence_strength": 0.7071067811865475,
-        "mention_count": 1
-      },
-      "confidence": 0.6985885174820743,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
       "target": "algo_iddfs",
       "relation_type": "related_to",
       "properties": {
-        "co_occurrence_strength": 0.23570226039551587,
-        "mention_count": 1
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 2,
+        "min_distance": 98,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
       },
-      "confidence": 0.5809879247725744,
+      "confidence": 0.77118598894933,
       "context": ""
     },
     {
-      "source": "algo_ida*",
-      "target": "algo_bfs",
+      "source": "algo_iddfs",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 186,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.3577348066298343,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_backtracking",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 1,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.5216539196940726,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dls",
+      "target": "algo_ida*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_dls",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_dfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.7391639824998364,
+        "mention_count": 156
+      },
+      "confidence": 0.8641899742113416,
+      "context": " \n•describe the transitions and validate them \n•specify a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_ida*",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -1240,606 +2525,18 @@
         "mention_count": 5
       },
       "confidence": 0.8410653871177618,
-      "context": ""
-    },
-    {
-      "source": "algo_a*",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 1,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.9904397705544932,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
+      "context": "fy a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening \n○Backtracking \n○Bidirectional \n●Informed - heuristi"
     },
     {
       "source": "algo_dfs",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.5773502691896258,
-        "mention_count": 3
-      },
-      "confidence": 0.7538785403981204,
-      "context": ""
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 172,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.37590711175616837,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bfs",
       "target": "algo_iddfs",
       "relation_type": "related_to",
       "properties": {
-        "co_occurrence_strength": 1.1547005383792517,
-        "mention_count": 48
+        "co_occurrence_strength": 1.4833333333333334,
+        "mention_count": 91
       },
-      "confidence": 0.8433927006135946,
-      "context": ""
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 183,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.36147941381716675,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "prob_8_puzzle",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 2,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.9920792079207921,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "prob_cat_path_finding",
-      "relation_type": "belongs_to_category",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "prob_cat_csp",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_beam_search",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 76,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf",
-        "co_occurrence_strength": 1.0,
-        "mention_count": 9
-      },
-      "confidence": 0.823583175205566,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "prob_cat_csp",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_gbfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.414213562373095,
-        "mention_count": 4
-      },
-      "confidence": 0.8400486381322957,
-      "context": ""
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_bfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 3
-      },
-      "confidence": 0.7906188605108055,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_ucs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.2060453783110545,
-        "mention_count": 16
-      },
-      "confidence": 0.8227912406916571,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_dfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.6324555320336759,
-        "mention_count": 7
-      },
-      "confidence": 0.8183712121212121,
-      "context": ""
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_sma*",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 187,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.35650378527185134,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.414213562373095,
-        "mention_count": 6
-      },
-      "confidence": 0.8080684174153421,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "heur_euclidean_distance",
-      "relation_type": "uses",
-      "properties": {
-        "co_occurrence_strength": 0.5163977794943222,
-        "mention_count": 5
-      },
-      "confidence": 0.6965593172737987,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8944271909999159,
-        "mention_count": 34
-      },
-      "confidence": 0.8432275270432217,
-      "context": "ng \ndepth (distance from initial state) - no \nmore infinite paths \n\nRandom vs DFS \n●The same, if random remembers visited neighbours \nBacktracking vs DFS \n●NOT the same \n●Backtracking sets an order fo"
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "heur_euclidean_distance",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.7071067811865475,
-        "mention_count": 1
-      },
-      "confidence": 0.7211320343559642,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_beam_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 3
-      },
-      "confidence": 0.8545375722543352,
-      "context": ""
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 66,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.6108490566037736,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "prob_8_puzzle",
-      "target": "prob_cat_puzzle",
-      "relation_type": "belongs_to_category",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 133,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.5086811968969338,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "prob_8_puzzle",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 3
-      },
-      "confidence": 0.8128612716763006,
-      "context": ""
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_a*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 147,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9146143122676579,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_rbfs",
-      "target": "algo_iddfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_iddfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.7071067811865475,
-        "mention_count": 2,
-        "min_distance": 98,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8022520061273122,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 13,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9918115394305872,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_ida*",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 15,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.943502824858757,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_iddfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 198,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.41018766756032177,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "prob_n_queens",
-      "target": "prob_cat_csp",
-      "relation_type": "belongs_to_category",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 1.0,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 4
-      },
-      "confidence": 0.7796460176991149,
-      "context": ""
-    },
-    {
-      "source": "algo_rbfs",
-      "target": "prob_cat_puzzle",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.85,
-      "context": ""
-    },
-    {
-      "source": "prob_8_puzzle",
-      "target": "heur_euclidean_distance",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 16,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.9399624765478425,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "heur_misplaced_tiles",
-      "target": "prob_8_puzzle",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.2247448713915892,
-        "mention_count": 3
-      },
-      "confidence": 0.8878272696906218,
-      "context": "arch!\nCOMP-424, Lecture 3 - January 14, 201314\nExamples of admissible heuristics•Robot navigation: straight-line distance to goal•8-puzzle: number of misplaced tiles•8-puzzle: sum of Manhattan distanc"
-    },
-    {
-      "source": "algo_rbfs",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "prob_8_puzzle",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 4,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\lecture2.pdf"
-      },
-      "confidence": 0.9892588614393125,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\lecture2.pdf"
-    },
-    {
-      "source": "prob_cat_path_finding",
-      "target": "prob_route_finding",
-      "relation_type": "contains_problem",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_dls",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.9805806756909202,
-        "mention_count": 10
-      },
-      "confidence": 0.9207406723337381,
-      "context": "r than DFS and needs less space than BFS. But the main drawback of IDDFS is that it repeats all the work from the previous phase.\n\n The advantage of Bidirectional search (BS) is that it uses various "
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_beam_search",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 128,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.44732297063903276,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
+      "confidence": 0.8669216689402675,
+      "context": " a heuristic). \n\nGreedy evaluation \nBest case: gets you to the final \nstate much quicker than DFS, \ndoesn’t guarantee optimal \nsolution. \nWorst case: DFS with bad \nchoices. \n?\nHillclimbing \nSelect one"
     },
     {
       "source": "algo_dfs",
@@ -1853,387 +2550,7 @@
       "context": "IDDFS is that it repeats all the work from the previous phase.\n\n The advantage of Bidirectional search (BS) is that it uses various techniques \nlike DFS, BFS, DLS, etc, so it is efficient and require"
     },
     {
-      "source": "algo_gbfs",
-      "target": "algo_bfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 2.008316044185609,
-        "mention_count": 19
-      },
-      "confidence": 0.8543453656098257,
-      "context": "p to an increasing \ndepth (distance from initial state) - no \nmore infinite paths \n\nRandom vs DFS \n●The same, if random remembers visited neighbours \nBacktracking vs DFS \n●NOT the same \n●Backtracking "
-    },
-    {
-      "source": "algo_ida*",
-      "target": "algo_dls",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_rbfs",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_a*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_dls",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "prob_cat_recursive",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_dfs",
-      "target": "opt_memoization",
-      "relation_type": "can_use",
-      "properties": {
-        "co_occurrence_strength": 0.21081851067789195,
-        "mention_count": 2
-      },
-      "confidence": 0.5857078821864077,
-      "context": ""
-    },
-    {
       "source": "algo_ucs",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 190,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.3528610354223433,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "prob_8_puzzle",
-      "target": "algo_dfs",
-      "relation_type": "solved_by",
-      "properties": {
-        "co_occurrence_strength": 0.2581988897471611,
-        "mention_count": 2
-      },
-      "confidence": 0.5927605378663494,
-      "context": "DOMIN ATING HEURISTICS DOMIN ATING HEURISTICS\nIf (admissible)  for all , \nthen  dominat es  and is be tter for se arch.\nTypic al se arch c osts (f or 8-puzzle):\ndepth = 14 DFS  ≈  3,000,000 nodes  \nA*"
-    },
-    {
-      "source": "heur_manhattan_distance",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 6,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.9766081871345029,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_backtracking",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_backtracking",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 9,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.5035276073619632,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "algo_a*",
-      "relation_type": "solved_by",
-      "properties": {
-        "co_occurrence_strength": 2.0,
-        "mention_count": 4
-      },
-      "confidence": 1.1073556370302475,
-      "context": ""
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 193,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8908124009957004,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 2.2453655975512468,
-        "mention_count": 12
-      },
-      "confidence": 0.8566539196940726,
-      "context": "es \n●How do you order states? \n●Backtracking doesn't need to memorize visited states! \n●Backtracking can avoid loops WITHOUT storing visited states \n●Backtracking  can prune invalid branches earlier, "
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 192,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.4176524112829845,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "opt_caching",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 85,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.7466467958271237,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 2,
-        "min_distance": 50,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.7702941348684904,
-      "context": ""
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.4142135623730951,
-        "mention_count": 9,
-        "min_distance": 9,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.8230108613286182,
-      "context": ""
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_rbfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "heur_euclidean_distance",
-      "relation_type": "uses",
-      "properties": {
-        "min_distance": 54,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9668426869704041,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 60,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.6332518337408313,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "algo_ida*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 145,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9156780646662015,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 126,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.45121951219512196,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_ida*",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_gbfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_simulated_annealing",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.6329931618554523,
-        "mention_count": 8
-      },
-      "confidence": 0.8801994067237968,
-      "context": "r; \nIf (Validate (s, piece, tower)) \ns = Transition(s, piece, tower); \n}\n}\n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening"
-    },
-    {
-      "source": "algo_rbfs",
-      "target": "opt_memoization",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 47,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9710162802170695,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "heur_manhattan_distance",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.5773502691896258,
-        "mention_count": 1
-      },
-      "confidence": 0.6771919475486325,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
       "target": "prob_cat_path_finding",
       "relation_type": "specializes_in",
       "properties": {
@@ -2244,231 +2561,25 @@
       "context": ""
     },
     {
-      "source": "prob_8_puzzle",
-      "target": "algo_ucs",
-      "relation_type": "solved_by",
-      "properties": {
-        "co_occurrence_strength": 1.2247448713915892,
-        "mention_count": 3
-      },
-      "confidence": 0.8553621883657219,
-      "context": ""
-    },
-    {
-      "source": "algo_a*",
+      "source": "algo_ucs",
       "target": "algo_beam_search",
       "relation_type": "related_to",
       "properties": {
-        "min_distance": 129,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
+        "co_occurrence_strength": 1.0,
+        "mention_count": 3
       },
-      "confidence": 0.4453998280309544,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_ucs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "uses",
-      "properties": {
-        "min_distance": 25,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.9092558983666061,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 13,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.9137358991373591,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "prob_route_finding",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 171,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.37727603787327024,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "heur_misplaced_tiles",
-      "target": "heur_manhattan_distance",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.7071067811865475,
-        "mention_count": 1
-      },
-      "confidence": 0.7289448998530403,
+      "confidence": 0.7767845961177207,
       "context": ""
     },
     {
-      "source": "algo_dls",
-      "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 2,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9987314474184955,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_iddfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_sma*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 189,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.354066985645933,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
       "source": "algo_bfs",
-      "target": "algo_iddfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_dls",
-      "target": "algo_a*",
+      "target": "algo_backtracking",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
         "reason": "both_optimal"
       },
       "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "prob_cat_puzzle",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.7131997238879487,
-        "mention_count": 25
-      },
-      "confidence": 0.8202618705192739,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "prob_cat_puzzle",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8660254037844387,
-        "mention_count": 32
-      },
-      "confidence": 0.8196376086548682,
-      "context": "avoid loops WITHOUT storing visited states \n●Backtracking  can prune invalid branches earlier, if the order and \nselection of neighbours is optimal \n\nBidirectional Search \n●Starts exploring from both "
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_dfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 1.7391639824998364,
-        "mention_count": 156
-      },
-      "confidence": 0.8641899742113416,
-      "context": "y in which you solve it \n N = average number of accessible states \n O = length of the optimum solution \n A = length of the average solution Criterion BFS DFS IDS Bidirectional BKT Random \nETC NONA NO "
-    },
-    {
-      "source": "algo_simulated_annealing",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
-      "properties": {
-        "min_distance": 169,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.38004402054292,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 1,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-      },
-      "confidence": 0.5224765681326604,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_2_SBM_I.pdf"
-    },
-    {
-      "source": "algo_ucs",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
       "context": "Both algorithms guarantee optimal solutions"
     },
     {
@@ -2483,43 +2594,229 @@
       "context": ""
     },
     {
-      "source": "prob_8_puzzle",
-      "target": "prob_route_finding",
+      "source": "algo_iddfs",
+      "target": "algo_backtracking",
       "relation_type": "related_to",
       "properties": {
-        "min_distance": 6,
+        "min_distance": 118,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.9766081871345029,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "heur_misplaced_tiles",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8164965809277261,
+        "document": "Knowledge Source/ai-lecture03.pdf",
+        "co_occurrence_strength": 0.4082482904638631,
         "mention_count": 2
       },
-      "confidence": 0.7597745556736666,
+      "confidence": 0.6692595148643686,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 88,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.5407098121085595,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 86,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.5140194389763779,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_a*",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 66,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.6108490566037736,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "algo_gbfs",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.6329931618554523,
+        "mention_count": 6,
+        "min_distance": 3,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.8243344320486814,
+      "context": ""
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "algo_beam_search",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 2.0,
+        "mention_count": 10
+      },
+      "confidence": 0.8737284482758619,
+      "context": " Iterative Deepening \n○Backtracking \n○Bidirectional \n●Informed - heuristics to help distinguish between states \n○Greedy best-first \n○Hillclimbing and Simulated Annealing \n○Beam search \n○A* and IDA* \n\n"
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 1.0,
+        "mention_count": 4
+      },
+      "confidence": 0.7796460176991149,
+      "context": ""
+    },
+    {
+      "source": "algo_ucs",
+      "target": "algo_backtracking",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bfs",
+      "target": "opt_memoization",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 23,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9856034051076615,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_simulated_annealing",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 169,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.38004402054292,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_ucs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_bfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_iddfs",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.175,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_ucs",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 184,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.5243344320486815,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "heur_manhattan_distance",
+      "relation_type": "uses",
+      "properties": {
+        "min_distance": 73,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.7743431221020093,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_dfs",
+      "target": "algo_bidirectional_search",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "heur_manhattan_distance",
+      "relation_type": "related_to",
+      "properties": {
+        "co_occurrence_strength": 0.7071067811865475,
+        "mention_count": 1
+      },
+      "confidence": 0.7289448998530403,
       "context": ""
     },
     {
       "source": "algo_dfs",
-      "target": "prob_tower_of_hanoi",
-      "relation_type": "solves",
+      "target": "algo_a*",
+      "relation_type": "comparable_optimality",
       "properties": {
-        "min_distance": 127,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
+        "inferred": true,
+        "reason": "both_optimal"
       },
-      "confidence": 0.44926279271465736,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
     },
     {
-      "source": "algo_gbfs",
-      "target": "algo_ida*",
+      "source": "prob_8_puzzle",
+      "target": "prob_cat_puzzle",
+      "relation_type": "belongs_to_category",
+      "properties": {
+        "inferred": true
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "algo_backtracking",
       "relation_type": "comparable_optimality",
       "properties": {
         "inferred": true,
@@ -2530,14 +2827,106 @@
     },
     {
       "source": "algo_ucs",
-      "target": "algo_beam_search",
+      "target": "prob_8_puzzle",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 21,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.9226519337016574,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "prob_route_finding",
+      "target": "algo_ucs",
+      "relation_type": "solved_by",
+      "properties": {
+        "co_occurrence_strength": 0.8164965809277261,
+        "mention_count": 2
+      },
+      "confidence": 0.7297546279885652,
+      "context": ""
+    },
+    {
+      "source": "algo_iddfs",
+      "target": "prob_cat_path_finding",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
+      "context": ""
+    },
+    {
+      "source": "heur_misplaced_tiles",
+      "target": "prob_8_puzzle",
       "relation_type": "related_to",
       "properties": {
-        "co_occurrence_strength": 1.0,
+        "co_occurrence_strength": 1.2247448713915892,
         "mention_count": 3
       },
-      "confidence": 0.7767845961177207,
+      "confidence": 0.8878272696906218,
+      "context": "arch!\nCOMP-424, Lecture 3 - January 14, 201314\nExamples of admissible heuristics•Robot navigation: straight-line distance to goal•8-puzzle: number of misplaced tiles•8-puzzle: sum of Manhattan distanc"
+    },
+    {
+      "source": "algo_a*",
+      "target": "prob_cat_puzzle",
+      "relation_type": "specializes_in",
+      "properties": {
+        "inferred": true,
+        "reason": "domain_expertise"
+      },
+      "confidence": 0.175,
       "context": ""
+    },
+    {
+      "source": "algo_gbfs",
+      "target": "prob_route_finding",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 26,
+        "same_document": true,
+        "document": "Knowledge Source/ai-lecture03.pdf"
+      },
+      "confidence": 0.49208860759493667,
+      "context": "Both entities appear in Knowledge Source/ai-lecture03.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "prob_tower_of_hanoi",
+      "relation_type": "solves",
+      "properties": {
+        "min_distance": 184,
+        "same_document": true,
+        "document": "Knowledge Source/IA_3_SBM_II.pdf"
+      },
+      "confidence": 0.36022253129346316,
+      "context": "Both entities appear in Knowledge Source/IA_3_SBM_II.pdf"
+    },
+    {
+      "source": "algo_bidirectional_search",
+      "target": "opt_pruning",
+      "relation_type": "can_use",
+      "properties": {
+        "min_distance": 13,
+        "same_document": true,
+        "document": "Knowledge Source/IA_2_SBM_I.pdf"
+      },
+      "confidence": 0.9137358991373591,
+      "context": "Both entities appear in Knowledge Source/IA_2_SBM_I.pdf"
+    },
+    {
+      "source": "algo_rbfs",
+      "target": "algo_ida*",
+      "relation_type": "comparable_optimality",
+      "properties": {
+        "inferred": true,
+        "reason": "both_optimal"
+      },
+      "confidence": 0.5,
+      "context": "Both algorithms guarantee optimal solutions"
     },
     {
       "source": "prob_graph_coloring",
@@ -2551,301 +2940,62 @@
       "context": ""
     },
     {
-      "source": "algo_simulated_annealing",
-      "target": "prob_cat_tour/traversal",
-      "relation_type": "specializes_in",
+      "source": "algo_dfs",
+      "target": "algo_simulated_annealing",
+      "relation_type": "related_to",
       "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
+        "co_occurrence_strength": 0.6324555320336759,
+        "mention_count": 4
       },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
+      "confidence": 0.8566201455171247,
+      "context": "ions and validate them \n•specify a search strategy \n\nSearch strategies \n●Uninformed - no distinction between states \n○Random \n○BFS and Uniform Cost \n○DFS and Iterative Deepening \n○Backtracking \n○Bidir"
     },
     {
       "source": "algo_backtracking",
+      "target": "algo_forward_checking",
+      "relation_type": "related_to",
+      "properties": {
+        "min_distance": 105,
+        "same_document": true,
+        "document": "Knowledge Source/curs_CSP.pdf"
+      },
+      "confidence": 0.7612551159618008,
+      "context": "Both entities appear in Knowledge Source/curs_CSP.pdf"
+    },
+    {
+      "source": "algo_dls",
       "target": "algo_gbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.8660254037844387,
-        "mention_count": 5
-      },
-      "confidence": 0.8035276073619633,
-      "context": ""
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_sma*",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "prob_8_puzzle",
-      "relation_type": "solves",
-      "properties": {
-        "co_occurrence_strength": 0.24618298195866545,
-        "mention_count": 2
-      },
-      "confidence": 0.6437226194553245,
-      "context": "f\nf(n)<C\nf(n)=C\nf(n)>C\nf(n)>C∗\nC∗\n4 9\nILLUSTRATION: WHY IS A* OPTIMAL? ILLUSTRATION: WHY IS A* OPTIMAL?\nA* gradually adds “ -contours” of nodes (cf . BFS adds lay ers)\nCont our  has all nodes with , w"
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_bidirectional_search",
-      "target": "prob_cat_path_finding",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_rbfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "heur_manhattan_distance",
-      "relation_type": "uses",
-      "properties": {
-        "min_distance": 73,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.7743431221020093,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_bfs",
-      "target": "algo_dls",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.2946278254943948,
-        "mention_count": 5
-      },
-      "confidence": 0.7164431663927924,
-      "context": " is that it repeats all the work from the previous phase.\n\n The advantage of Bidirectional search (BS) is that it uses various techniques \nlike DFS, BFS, DLS, etc, so it is efficient and requires les"
-    },
-    {
-      "source": "heur_euclidean_distance",
-      "target": "prob_route_finding",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.5773502691896258,
-        "mention_count": 1
-      },
-      "confidence": 0.6886905176500915,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_a*",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 61,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-      },
-      "confidence": 0.5245560065964734,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\IA_3_SBM_II.pdf"
-    },
-    {
-      "source": "algo_gbfs",
-      "target": "algo_rbfs",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 109,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9352577809455928,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_backtracking",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 147,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf",
-        "co_occurrence_strength": 2.041241452319315,
-        "mention_count": 5
-      },
-      "confidence": 0.7813890654799744,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "algo_a*",
-      "target": "algo_ida*",
       "relation_type": "related_to",
       "properties": {
         "min_distance": 2,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+        "document": "Knowledge Source/Unit-3.pdf"
       },
       "confidence": 0.9987314474184955,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
     },
     {
-      "source": "algo_dls",
-      "target": "algo_bidirectional_search",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "heur_misplaced_tiles",
-      "target": "algo_ucs",
-      "relation_type": "used_by",
-      "properties": {
-        "co_occurrence_strength": 1.0,
-        "mention_count": 2
-      },
-      "confidence": 0.782092819614711,
-      "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_backtracking",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 118,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf",
-        "co_occurrence_strength": 0.4082482904638631,
-        "mention_count": 2
-      },
-      "confidence": 0.6692595148643686,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_route_finding",
-      "target": "opt_caching",
-      "relation_type": "related_to",
-      "properties": {
-        "min_distance": 76,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-      },
-      "confidence": 0.7672281776416539,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_route_finding",
+      "source": "algo_bfs",
       "target": "heur_euclidean_distance",
+      "relation_type": "uses",
+      "properties": {
+        "min_distance": 80,
+        "same_document": true,
+        "document": "Knowledge Source/Unit-3.pdf"
+      },
+      "confidence": 0.9516499456061889,
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
+    },
+    {
+      "source": "algo_backtracking",
+      "target": "algo_bidirectional_search",
       "relation_type": "related_to",
       "properties": {
-        "min_distance": 7,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
+        "co_occurrence_strength": 2.2453655975512468,
+        "mention_count": 12
       },
-      "confidence": 0.9728155339805824,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\ai-lecture03.pdf"
-    },
-    {
-      "source": "prob_tower_of_hanoi",
-      "target": "prob_cat_recursive",
-      "relation_type": "belongs_to_category",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 0.175,
+      "confidence": 0.8566539196940726,
       "context": ""
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "opt_memoization",
-      "relation_type": "can_use",
-      "properties": {
-        "min_distance": 30,
-        "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-      },
-      "confidence": 0.9813037517138228,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_dfs",
-      "target": "opt_pruning",
-      "relation_type": "can_use",
-      "properties": {
-        "co_occurrence_strength": 0.8944271909999159,
-        "mention_count": 4
-      },
-      "confidence": 0.8186214252960211,
-      "context": ""
-    },
-    {
-      "source": "prob_8_puzzle",
-      "target": "prob_n_queens",
-      "relation_type": "related_to",
-      "properties": {
-        "co_occurrence_strength": 0.6172133998483676,
-        "mention_count": 4
-      },
-      "confidence": 0.6747285478881526,
-      "context": ""
-    },
-    {
-      "source": "prob_cat_csp",
-      "target": "prob_n_queens",
-      "relation_type": "contains_problem",
-      "properties": {
-        "inferred": true
-      },
-      "confidence": 1.0,
-      "context": ""
-    },
-    {
-      "source": "algo_sma*",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.5,
-      "context": "Both algorithms guarantee optimal solutions"
     },
     {
       "source": "algo_dls",
@@ -2854,32 +3004,10 @@
       "properties": {
         "min_distance": 107,
         "same_document": true,
-        "document": "f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
+        "document": "Knowledge Source/Unit-3.pdf"
       },
       "confidence": 0.9363701236917221,
-      "context": "Both entities appear in f:\\General Info\\Anul III\\AI\\Knowledge Source\\Unit-3.pdf"
-    },
-    {
-      "source": "algo_iddfs",
-      "target": "algo_dfs",
-      "relation_type": "comparable_optimality",
-      "properties": {
-        "inferred": true,
-        "reason": "both_optimal"
-      },
-      "confidence": 0.175,
-      "context": "Both algorithms guarantee optimal solutions"
-    },
-    {
-      "source": "algo_a*",
-      "target": "prob_cat_puzzle",
-      "relation_type": "specializes_in",
-      "properties": {
-        "inferred": true,
-        "reason": "domain_expertise"
-      },
-      "confidence": 0.175,
-      "context": ""
+      "context": "Both entities appear in Knowledge Source/Unit-3.pdf"
     }
   ]
 }

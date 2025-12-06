@@ -6,6 +6,7 @@ Generates answers about best solving strategies based on knowledge graph and ins
 
 import json
 from typing import Dict, List, Tuple, Optional
+from MinMaxNode import MinMaxNode, evaluate_tree
 
 
 class AnswerGenerator:
@@ -185,40 +186,59 @@ class AnswerGenerator:
     def generate_answer(self, problem_name: str, instance_data: dict) -> Dict[str, any]:
         """
         Generate comprehensive answer using KG and instance analysis.
+        Handles MinMax problems if tree is provided.
         """
-        # Analyze the specific instance
+        # 1️⃣ Eval MinMax tree if applicable
+        minmax_result = None
+        problem_lower = problem_name.lower()
+        if ('minmax' in problem_lower or 'alpha-beta' in problem_lower) and 'tree' in instance_data:
+            minmax_result = self.evaluate_minmax_tree(instance_data['tree'])
+
+        # 2️⃣ Analyze the specific instance
         instance_analysis = self._analyze_instance(problem_name, instance_data)
-        
-        # Find algorithms from knowledge graph
+
+        # 3️⃣ Find algorithms from knowledge graph
         kg_algorithms = self._get_algorithms_from_kg()
-        
-        # Get explicit solvers from knowledge graph (instance-aware)
+
+        # 4️⃣ Get explicit solvers from knowledge graph (instance-aware)
         solving_algos = self.get_solving_algorithms(problem_name, instance_analysis)
-        
-        # Score and rank algorithms based on instance and KG
+
+        # 5️⃣ Score and rank algorithms based on instance and KG
         recommendations = self._score_and_rank_algorithms(
             problem_name,
             instance_analysis,
             kg_algorithms,
             solving_algos
         )
-        
-        # Generate reasoning based on KG and instance
+
+        # 6️⃣ Generate reasoning based on KG and instance
         reasoning = self._generate_reasoning_from_kg(
             problem_name, 
             instance_analysis, 
             recommendations
         )
-        
-        return {
+
+        # 7️⃣ Include MinMax results if applicable
+        if minmax_result:
+            reasoning += "\n**MinMax Evaluation:**\n"
+            reasoning += f"- Root value: {minmax_result['root_value']}\n"
+            reasoning += f"- Leaf nodes visited: {minmax_result['leaves_visited']}\n"
+
+        # 8️⃣ Return final structured answer
+        answer = {
             'problem_name': problem_name,
             'instance_analysis': instance_analysis,
             'explicit_solvers': solving_algos,
             'recommendations': recommendations,
             'heuristics': self.get_heuristics_for_problem(problem_name),
-            'reasoning': reasoning
+            'reasoning': reasoning,
         }
-    
+
+        if minmax_result:
+            answer['minmax_result'] = minmax_result
+
+        return answer
+
     def _get_algorithms_from_kg(self) -> List[Dict]:
         """Get all algorithms from knowledge graph with their properties."""
         algorithms = []
@@ -606,6 +626,16 @@ class AnswerGenerator:
                 reasoning += f"- **{alt['algorithm']}**: {alt['when_to_use']}\n"
         
         return reasoning
+    def evaluate_minmax_tree(self, tree_structure: dict) -> dict:
+        def build_node(subtree):
+            if 'value' in subtree:
+                return MinMaxNode(value=subtree['value'])
+            children = [build_node(child) for child in subtree.get('children', [])]
+            return MinMaxNode(children=children)
+        
+        root = build_node(tree_structure)
+        value, leaves_visited = evaluate_tree(root, maximizing=True)
+        return {'root_value': value, 'leaves_visited': leaves_visited}
 
 
 if __name__ == "__main__":

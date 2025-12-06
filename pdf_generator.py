@@ -5,6 +5,8 @@ Generates PDF with problem instances, questions, and answers.
 """
 
 import random
+from reportlab.graphics.shapes import Drawing, Circle, Line, String
+from reportlab.platypus import Spacer
 from typing import List, Dict
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -134,7 +136,8 @@ class PDFQuestionGenerator:
             ('Tower of Hanoi', self._generate_hanoi_instances, n_instances_per_problem),
             ('Graph Coloring', self._generate_graph_coloring_instances, n_instances_per_problem),
             ('Knight\'s Tour', self._generate_knight_tour_instances, n_instances_per_problem),
-            ('8-Puzzle', self._generate_8puzzle_instances, n_instances_per_problem)
+            ('8-Puzzle', self._generate_8puzzle_instances, n_instances_per_problem),
+            ('MinMax', self._generate_minmax_instances, n_instances_per_problem)
         ]
         
         for i, (problem_name, generator_func, n_instances) in enumerate(problems, 1):
@@ -160,11 +163,23 @@ class PDFQuestionGenerator:
                 story.append(Spacer(1, 0.15 * inch))
                 
                 # Generate answer
-                answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
-                
-                # Answer section
                 story.append(Paragraph("Answer:", self.styles['AnswerHeading']))
-                story.extend(self._format_answer(answer))
+
+                if problem_name == "MinMax":
+                    # doar calcul local, fără AnswerGenerator
+                    tree = instance.instance_data['tree']
+                    root_value, leaves_visited = self._minmax_alpha_beta(tree)
+                    story.append(Paragraph(
+                        f"<b>Root Value:</b> {root_value}<br/>"
+                        f"<b>Leaves Visited with Alpha-Beta:</b> {leaves_visited}",
+                        self.styles['AnswerBody']
+                    ))
+                    story.append(Spacer(1, 0.5 * inch))
+                else:
+                    # restul problemelor folosesc AnswerGenerator
+                    answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
+                    story.extend(self._format_answer(answer))
+
                 
                 story.append(Spacer(1, 0.3 * inch))
             
@@ -224,7 +239,9 @@ class PDFQuestionGenerator:
             'Tower of Hanoi': self._generate_hanoi_instances,
             'Graph Coloring': self._generate_graph_coloring_instances,
             'Knight\'s Tour': self._generate_knight_tour_instances,
-            '8-Puzzle': self._generate_8puzzle_instances
+            '8-Puzzle': self._generate_8puzzle_instances,
+            'MinMax': self._generate_minmax_instances  
+
         }
         
         if problem_name not in generator_map:
@@ -250,18 +267,103 @@ class PDFQuestionGenerator:
             story.append(Spacer(1, 0.15 * inch))
             
             # Generate answer from knowledge graph
-            answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
-            
-            # Answer section
             story.append(Paragraph("Answer:", self.styles['AnswerHeading']))
-            story.extend(self._format_answer(answer))
+
+            if problem_name == "MinMax":
+                # calcul local, fără AnswerGenerator
+                tree = instance.instance_data['tree']
+                root_value, leaves_visited = self._minmax_alpha_beta(tree)
+                story.append(Paragraph(
+                    f"<b>Root Value:</b> {root_value}<br/>"
+                    f"<b>Leaves Visited with Alpha-Beta:</b> {leaves_visited}",
+                    self.styles['AnswerBody']
+                ))
+                story.append(Spacer(1, 0.5 * inch))
+            else:
+                # restul problemelor folosesc AnswerGenerator
+                answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
+                story.extend(self._format_answer(answer))
+
             
             story.append(Spacer(1, 0.3 * inch))
         
         # Build PDF
         doc.build(story)
         print(f"PDF generated: {output_path}")
-    
+    def _generate_minmax_instances(self, n: int) -> List[ProblemInstance]:
+        """Generate n random MinMax tree instances."""
+        instances = []
+        for _ in range(n):
+            depth = random.randint(2, 4)  # nivele arbore
+            max_children = random.randint(2, 3)  # copii pe nod
+            # Folosim o funcție helper care creează arborele cu valori la frunze
+            tree_data = self._create_random_minmax_tree(depth, max_children)
+            instance = ProblemInstance(problem_type="MinMax", instance_data={"tree": tree_data})
+            instances.append(instance)
+        return instances
+    def _create_random_minmax_tree(self, depth, max_children, max_nodes=20, current_count=[0]):
+        """
+        Returnează un arbore MinMax cu valori doar la frunze, limitat la max_nodes noduri.
+        Folosim current_count ca listă pentru a putea modifica valoarea în recursie.
+        """
+        if current_count[0] >= max_nodes:
+            # Am atins limita de noduri → facem frunză
+            return {"value": random.randint(1, 20)}
+        
+        if depth == 0:
+            current_count[0] += 1
+            return {"value": random.randint(1, 20)}
+        else:
+            n_children = random.randint(2, min(max_children, 3))
+            children = []
+            for _ in range(n_children):
+                if current_count[0] >= max_nodes:
+                    break
+                child = self._create_random_minmax_tree(depth-1, max_children, max_nodes, current_count)
+                children.append(child)
+                current_count[0] += 1
+            return {"children": children} if children else {"value": random.randint(1, 20)}
+
+    def _draw_minmax_tree(self, tree, width=500, height=400, max_levels=4):
+        """Desenează arbore MinMax cu spațiere mai mare între noduri."""
+        drawing = Drawing(width, height)
+        level_height = 100  # mai mult spațiu între nivele
+
+        def count_leaves(node):
+            if "value" in node:
+                return 1
+            elif "children" in node:
+                return sum(count_leaves(c) for c in node["children"])
+            return 0
+
+        def draw_node(node, x, y, level, parent_coords=None):
+            node_radius = 12
+            if parent_coords:
+                px, py = parent_coords
+                drawing.add(Line(px, py - node_radius, x, y + node_radius))
+
+            if "value" in node:
+                drawing.add(Circle(x, y, node_radius, fillColor=None))
+                drawing.add(String(x-4, y-4, str(node['value']), fontSize=8))
+                return 1
+            elif "children" in node:
+                n_leaves = [count_leaves(c) for c in node["children"]]
+                total_leaves = sum(n_leaves)
+                spacing = 40  # spațiu mai mare între nodurile copii
+                x_start = x - (total_leaves * spacing) / 2
+                acc = 0
+                for i, child in enumerate(node["children"]):
+                    cx = x_start + acc*spacing + n_leaves[i]*spacing/2
+                    cy = y - level_height
+                    draw_node(child, cx, cy, level+1, (x, y))
+                    acc += n_leaves[i]
+                drawing.add(Circle(x, y, node_radius, fillColor=None))
+                return total_leaves
+            return 0
+
+        draw_node(tree, width/2, height - 20, 0)
+        return [drawing, Spacer(1, 0.3*inch)]  # mai mult spațiu după arbore
+
     def _generate_n_queens_instances(self, n: int) -> List[ProblemInstance]:
         """Generate N-Queens instances."""
         instances = []
@@ -307,10 +409,13 @@ class PDFQuestionGenerator:
         return instances
     
     def _generate_question(self, problem_name: str) -> str:
-        """Generate question text."""
-        return f"""For the {problem_name} problem and the given instance, 
-        which is the most appropriate solving strategy among those mentioned 
-        in the course (BFS, DFS, UCS, A*, GBFS, IDA*, Hill Climbing, Simulated Annealing)?"""
+        if problem_name == "MinMax":
+            return ("For the given MinMax tree, what is the value at the root "
+                    "and how many leaf nodes are visited when applying MinMax with Alpha-Beta pruning?")
+        else:
+            return f"""For the {problem_name} problem and the given instance, 
+            which is the most appropriate solving strategy among those mentioned 
+            in the course (BFS, DFS, UCS, A*, GBFS, IDA*, Hill Climbing, Simulated Annealing)?"""
     
     def _visualize_instance(self, instance: ProblemInstance) -> List:
         """Visualize problem instance based on type."""
@@ -327,9 +432,15 @@ class PDFQuestionGenerator:
             elements.extend(self._visualize_knight_tour(data))
         elif instance.problem_type == "8-Puzzle":
             elements.extend(self._visualize_8puzzle(data))
+        elif instance.problem_type == "MinMax":  # ← nou
+            elements.extend(self._visualize_minmax(data))
         
         return elements
-    
+    def _visualize_minmax(self, data) -> list:
+        """Returnează o vizualizare grafică a arborelui MinMax."""
+        tree = data.get("tree")
+        return self._draw_minmax_tree(tree)
+
     def _visualize_n_queens(self, data: Dict) -> List:
         """Visualize N-Queens board as table."""
         n = data['n']
@@ -478,27 +589,72 @@ class PDFQuestionGenerator:
         )
         
         return [info, Spacer(1, 0.1 * inch), t]
-    
+    def _minmax_alpha_beta(self, node, maximizing=True, alpha=float('-inf'), beta=float('inf'), counter=None):
+        """
+        Apply MinMax with Alpha-Beta pruning.
+        Returns (value, leaves_visited)
+        """
+        if counter is None:
+            counter = {"leaves": 0}
+
+        # Leaf node check
+        if "value" in node:
+            counter["leaves"] += 1
+            return node["value"], counter["leaves"]
+
+        # Internal node
+        if maximizing:
+            value = float('-inf')
+            for child in node.get("children", []):  # safer access
+                child_value, _ = self._minmax_alpha_beta(child, False, alpha, beta, counter)
+                value = max(value, child_value)
+                alpha = max(alpha, value)
+                if beta <= alpha:
+                    break  # prune
+            return value, counter["leaves"]
+        else:
+            value = float('inf')
+            for child in node.get("children", []):
+                child_value, _ = self._minmax_alpha_beta(child, True, alpha, beta, counter)
+                value = min(value, child_value)
+                beta = min(beta, value)
+                if beta <= alpha:
+                    break  # prune
+            return value, counter["leaves"]
+
     def _format_answer(self, answer: Dict) -> List:
-        """Format answer into PDF elements."""
+        """Format answer into PDF elements with more spacing for readability."""
         elements = []
-        
-        recommendations = answer['recommendations']
+
+        # === Special handling for MinMax problem ===
+        if answer.get("problem_type") == "MinMax":
+            tree = answer['tree']  # arborele MinMax
+            root_value, leaves_visited = self._minmax_alpha_beta(tree)
+            elements.append(Paragraph(
+                f"<b>Root Value:</b> {root_value}<br/>"
+                f"<b>Leaves Visited with Alpha-Beta:</b> {leaves_visited}",
+                self.styles['AnswerBody']
+            ))
+            elements.append(Spacer(1, 0.5 * inch))  # mai mult spațiu după MinMax
+            return elements
+
+        # === Other problems ===
+        recommendations = answer.get('recommendations', [])
         if not recommendations:
             elements.append(Paragraph("No specific recommendations available.", self.styles['AnswerBody']))
+            elements.append(Spacer(1, 0.3 * inch))
             return elements
-        
-        # Best recommendation
+
         best = recommendations[0]
         
-        # Main recommendation
+        # Best strategy
         main_text = f"""
         <b>Best Strategy: {best['algorithm']}</b><br/>
         <i>{best['reason']}</i>
         """
         elements.append(Paragraph(main_text, self.styles['AnswerBody']))
-        elements.append(Spacer(1, 0.1 * inch))
-        
+        elements.append(Spacer(1, 0.25 * inch))
+
         # Complexity
         if best.get('complexity'):
             comp = best['complexity']
@@ -508,8 +664,8 @@ class PDFQuestionGenerator:
             if 'space' in comp:
                 comp_text += f", Space: {comp['space']}"
             elements.append(Paragraph(comp_text, self.styles['AnswerBody']))
-            elements.append(Spacer(1, 0.05 * inch))
-        
+            elements.append(Spacer(1, 0.15 * inch))
+
         # Properties
         if best.get('properties'):
             props = best['properties']
@@ -520,27 +676,28 @@ class PDFQuestionGenerator:
                 prop_list.append("Complete")
             if props.get('admissible'):
                 prop_list.append("Admissible heuristic")
-            
             if prop_list:
                 prop_text = f"<b>Properties:</b> {', '.join(prop_list)}"
                 elements.append(Paragraph(prop_text, self.styles['AnswerBody']))
-                elements.append(Spacer(1, 0.05 * inch))
-        
+                elements.append(Spacer(1, 0.15 * inch))
+
         # Alternative strategies
         if len(recommendations) > 1:
-            elements.append(Spacer(1, 0.1 * inch))
+            elements.append(Spacer(1, 0.2 * inch))
             elements.append(Paragraph("<b>Alternative Strategies:</b>", self.styles['AnswerBody']))
-            
+            elements.append(Spacer(1, 0.1 * inch))
             for alt in recommendations[1:]:
                 alt_text = f"• <b>{alt['algorithm']}</b>: {alt['when_to_use']}"
                 elements.append(Paragraph(alt_text, self.styles['AnswerBody']))
-        
-        # Heuristics
+                elements.append(Spacer(1, 0.1 * inch))
+
+        # Recommended heuristics
         if answer.get('heuristics'):
-            elements.append(Spacer(1, 0.1 * inch))
+            elements.append(Spacer(1, 0.2 * inch))
             heur_text = f"<b>Recommended Heuristics:</b> {', '.join(answer['heuristics'])}"
             elements.append(Paragraph(heur_text, self.styles['AnswerBody']))
-        
+            elements.append(Spacer(1, 0.3 * inch))
+
         return elements
 
 
@@ -559,9 +716,9 @@ def main():
     generator.generate_pdf(output_path, n_instances_per_problem=n_instances)
     
     print(f"\n✓ PDF generated successfully: {output_path}")
-    print(f"  - 5 problems covered")
+    print(f"  - 6 problems covered")
     print(f"  - {n_instances} instance(s) per problem")
-    print(f"  - Total: {5 * n_instances} questions with detailed answers")
+    print(f"  - Total: {6 * n_instances} questions with detailed answers")
 
 
 if __name__ == "__main__":

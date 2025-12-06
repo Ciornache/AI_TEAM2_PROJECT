@@ -4,6 +4,7 @@ Process all PDFs and merge into single knowledge graph
 """
 
 import json
+import os
 from document_processor_v5 import DocumentProcessorV5
 from knowledge_graph import KnowledgeGraph, Node, Edge
 
@@ -15,14 +16,12 @@ def process_all_sources():
     print("="*100)
     
     # List all PDF sources
+    source_folder = "Knowledge Source"  # folderul unde ai PDF-urile
     pdf_sources = [
-        r"f:\General Info\Anul III\AI\Knowledge Source\ai-lecture03.pdf",
-        r"f:\General Info\Anul III\AI\Knowledge Source\IA_2_SBM_I.pdf",
-        r"f:\General Info\Anul III\AI\Knowledge Source\IA_3_SBM_II.pdf",
-        r"f:\General Info\Anul III\AI\Knowledge Source\lecture2.pdf",
-        r"f:\General Info\Anul III\AI\Knowledge Source\Unit-3.pdf",
-    ]
-    
+    os.path.join(source_folder, f)
+    for f in os.listdir(source_folder)
+    if f.endswith(".pdf")
+    ]    
     # Start with first processor (has pre-seeded KG)
     print(f"\n[*] Initializing with first source...")
     first_processor = DocumentProcessorV5(pdf_sources[0], resource_type='local')
