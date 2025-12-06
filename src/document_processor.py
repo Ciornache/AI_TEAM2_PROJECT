@@ -18,7 +18,7 @@ from abc import ABC, abstractmethod
 import requests
 from bs4 import BeautifulSoup
 
-from knowledge_graph import KnowledgeGraph, Node, Edge
+from .knowledge_graph import KnowledgeGraph, Node, Edge
 
 try:
     import spacy

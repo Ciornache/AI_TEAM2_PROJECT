@@ -6,7 +6,7 @@ Generates answers about best solving strategies based on knowledge graph and ins
 
 import json
 from typing import Dict, List, Tuple, Optional
-from MinMaxNode import MinMaxNode, evaluate_tree
+from .MinMaxNode import MinMaxNode, evaluate_tree
 
 
 class AnswerGenerator:

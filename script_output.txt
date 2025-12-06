@@ -1,0 +1,31 @@
+================================================================================
+AI SEARCH STRATEGY QUESTION GENERATOR
+================================================================================
+
+Configuration:
+  - Selected Problem: Tower of Hanoi
+  - Number of instances: 1
+  - Total questions: 1
+
+Generating PDF...
+
+================================================================================
+GENERATING PDF FOR: Tower of Hanoi
+================================================================================
+PDF generated: /home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/output/AI_Search_Questions_Tower_of_Hanoi_20251206_154609.pdf
+
+================================================================================
+✓ SUCCESS!
+================================================================================
+PDF generated: /home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/output/AI_Search_Questions_Tower_of_Hanoi_20251206_154609.pdf
+Problem: Tower of Hanoi
+Total questions: 1
+
+Each question includes:
+  ✓ Problem instance visualization
+  ✓ Detailed question about best solving strategy
+  ✓ Knowledge graph-based answer with reasoning (NO hardcoded results)
+  ✓ Complexity analysis
+  ✓ Alternative strategies
+  ✓ Recommended heuristics
+

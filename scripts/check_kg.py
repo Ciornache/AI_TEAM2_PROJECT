@@ -1,6 +1,9 @@
 import json
+import os
 
-kg = json.load(open('knowledge_graph.json', encoding='utf-8'))
+# Path to KG in data/ folder
+kg_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "knowledge_graph.json")
+kg = json.load(open(kg_path, encoding='utf-8'))
 
 print("Edges to 8-Puzzle:")
 print("="*60)

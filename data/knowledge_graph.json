@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    {
+      "id": "prob_cat_csp",
+      "name": "CSP",
+      "type": "problem_category",
+      "properties": {
+        "description": "Problems in the CSP domain"
+      }
+    },
+    {
+      "id": "prob_cat_puzzle",
+      "name": "Puzzle",
+      "type": "problem_category",
+      "properties": {
+        "description": "Problems in the Puzzle domain"
+      }
+    },
+    {
+      "id": "prob_cat_path_finding",
+      "name": "Path Finding",
+      "type": "problem_category",
+      "properties": {
+        "description": "Problems in the Path Finding domain"
+      }
+    },
+    {
+      "id": "prob_cat_recursive",
+      "name": "Recursive",
+      "type": "problem_category",
+      "properties": {
+        "description": "Problems in the Recursive domain"
+      }
+    },
+    {
+      "id": "prob_cat_tour/traversal",
+      "name": "Tour/Traversal",
+      "type": "problem_category",
+      "properties": {
+        "description": "Problems in the Tour/Traversal domain"
+      }
+    }
+  ],
+  "edges": []
+}

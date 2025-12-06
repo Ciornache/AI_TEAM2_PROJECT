@@ -9,6 +9,10 @@ spacy>=3.7.0
 
 # PDF processing
 PyPDF2>=3.0.0
+reportlab>=4.0.0
+
+# Environment Management
+python-dotenv>=1.0.0
 
 # Optional: For better text extraction from web
 trafilatura>=1.8.0

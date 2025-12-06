@@ -3,10 +3,19 @@ Build Comprehensive Knowledge Graph from All Sources
 Process all PDFs and merge into single knowledge graph
 """
 
-import json
+import sys
 import os
-from document_processor_v5 import DocumentProcessorV5
-from knowledge_graph import KnowledgeGraph, Node, Edge
+import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Add project root to Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from src.document_processor import DocumentProcessorV5
+from src.knowledge_graph import KnowledgeGraph, Node, Edge
 
 def process_all_sources():
     """Process all PDF sources and merge into comprehensive KG."""
@@ -16,11 +25,19 @@ def process_all_sources():
     print("="*100)
     
     # List all PDF sources
-    source_folder = "Knowledge Source"  # folderul unde ai PDF-urile
+    # Go up one level from scripts/ to root, then into Knowledge Source
+    # Use environment variable if available, otherwise default to "Knowledge Source"
+    env_source_dir = os.getenv("KNOWLEDGE_SOURCE_DIR", "Knowledge Source")
+    source_folder = os.path.join(os.path.dirname(os.path.dirname(__file__)), env_source_dir)
+    
+    if not os.path.exists(source_folder):
+        print(f"Error: Source folder '{source_folder}' not found.")
+        return
+
     pdf_sources = [
-    os.path.join(source_folder, f)
-    for f in os.listdir(source_folder)
-    if f.endswith(".pdf")
+        os.path.join(source_folder, f)
+        for f in os.listdir(source_folder)
+        if f.endswith(".pdf")
     ]    
     # Start with first processor (has pre-seeded KG)
     print(f"\n[*] Initializing with first source...")
@@ -66,7 +83,7 @@ def process_all_sources():
         ]
     }
     
-    output_path = "knowledge_graph.json"
+    output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "knowledge_graph.json")
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(graph_data, f, indent=2, ensure_ascii=False)
     

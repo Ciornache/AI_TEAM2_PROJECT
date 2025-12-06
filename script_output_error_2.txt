@@ -1,0 +1,45 @@
+================================================================================
+AI SEARCH STRATEGY QUESTION GENERATOR (COMBINED)
+================================================================================
+
+Configuration:
+  - Mode: Combined (All Problems)
+  - Number of instances per problem: 3
+
+Generating PDF...
+Generating PDF with answers: /home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/output/AI_Search_Questions_With_Answers_20251206_155607.pdf
+PDF generated: /home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/output/AI_Search_Questions_With_Answers_20251206_155607.pdf
+Generating Worksheet PDF: /home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/output/AI_Search_Questions_Worksheet_20251206_155607.pdf
+Traceback (most recent call last):
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/scripts/generate_questions.py", line 92, in <module>
+    main()
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/scripts/generate_questions.py", line 71, in main
+    generator.generate_pdf(output_path_worksheet, n_instances, include_answers=False)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/src/pdf_generator.py", line 236, in generate_pdf
+    doc.build(story)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/doctemplate.py", line 1322, in build
+    BaseDocTemplate.build(self,flowables, canvasmaker=canvasmaker)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/doctemplate.py", line 1083, in build
+    self.handle_flowable(flowables)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/doctemplate.py", line 932, in handle_flowable
+    if frame.add(f, canv, trySplit=self.allowSplitting):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/frames.py", line 201, in _add
+    flowable.drawOn(canv, self._x + self._leftExtraIndent, y, _sW=aW-w)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/flowables.py", line 112, in drawOn
+    self._drawOn(canvas)
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/platypus/flowables.py", line 93, in _drawOn
+    self.draw()#this is the bit you overload
+    ^^^^^^^^^^^
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/src/pdf_generator.py", line 38, in draw
+    self.canv.acroForm.textfield(
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/pdfbase/acroform.py", line 915, in textfield
+    return self._textfield(
+           ^^^^^^^^^^^^^^^^
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/pdfbase/acroform.py", line 770, in _textfield
+    Ff = makeFlags(fieldFlags,fieldFlagValues)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/denis/Code/FII/Year_3/AI/AI_TEAM2_PROJECT/.venv/lib/python3.12/site-packages/reportlab/pdfbase/acroform.py", line 89, in makeFlags
+    s |= d[x]
+         ~^^^
+KeyError: 'MultiLine'

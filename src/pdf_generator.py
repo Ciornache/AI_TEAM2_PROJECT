@@ -11,15 +11,165 @@ from typing import List, Dict
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Flowable
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+from reportlab.pdfbase.pdfdoc import PDFDictionary, PDFName, PDFString, PDFArray
 
-from problem_generators import (
+from .problem_generators import (
     NQueensGenerator, HanoiGenerator, GraphColoringGenerator,
     KnightTourGenerator, Puzzle8Generator, ProblemInstance
 )
-from answer_generator import AnswerGenerator
+from .answer_generator import AnswerGenerator
+
+
+class InteractiveTextField(Flowable):
+    """A flowable that draws an interactive PDF text field."""
+    def __init__(self, name, width=450, height=60, value="", read_only=False, multiline=True):
+        Flowable.__init__(self)
+        self.name = name
+        self.width = width
+        self.height = height
+        self.value = value
+        self.read_only = read_only
+        self.multiline = multiline
+
+    def wrap(self, availWidth, availHeight):
+        return (self.width, self.height)
+
+    def draw(self):
+        self.canv.saveState()
+        flags = ''
+        if self.multiline:
+            flags += ' multiline'
+        if self.read_only:
+            flags += ' readOnly'
+            
+        self.canv.acroForm.textfield(
+            name=self.name,
+            value=self.value,
+            tooltip=f"Answer for {self.name}" if self.read_only else f"Enter answer for {self.name}",
+            x=0, y=0, 
+            width=self.width, 
+            height=self.height,
+            borderStyle='solid',
+            borderColor=colors.black,
+            # Force white background for editable fields, lightgrey for read-only
+            fillColor=colors.lightgrey if self.read_only else colors.white,
+            textColor=colors.black,
+            forceBorder=True,
+            fieldFlags=flags.strip(),
+            relative=True
+        )
+        self.canv.restoreState()
+
+
+class CheckAnswerButton(Flowable):
+    """A flowable that draws a button to check the answer with JS."""
+    def __init__(self, correct_root, correct_leaves, field_root_name, field_leaves_name, status_field_name, width=120, height=30):
+        Flowable.__init__(self)
+        self.correct_root = correct_root
+        self.correct_leaves = correct_leaves
+        self.field_root_name = field_root_name
+        self.field_leaves_name = field_leaves_name
+        self.status_field_name = status_field_name
+        self.width = width
+        self.height = height
+
+    def wrap(self, availWidth, availHeight):
+        return (self.width, self.height)
+
+    def draw(self):
+        self.canv.saveState()
+        
+        # Draw button appearance
+        self.canv.setFillColor(colors.lightgrey)
+        self.canv.setStrokeColor(colors.black)
+        self.canv.rect(0, 0, self.width, self.height, fill=1, stroke=1)
+        
+        self.canv.setFillColor(colors.black)
+        self.canv.setFont("Helvetica-Bold", 10)
+        self.canv.drawCentredString(self.width/2, self.height/2 - 3, "Check Answer")
+        
+        # JavaScript for validation
+        # We use try-catch and explicit null checks for robustness
+        # We now update: 1. Status Field, 2. Button Caption, 3. Alert
+        btn_name = f"btn_check_{self.field_root_name}"
+        
+        js_code = """
+        try {
+            var fRoot = this.getField("%s");
+            var fLeaves = this.getField("%s");
+            var fStatus = this.getField("%s");
+            var fBtn = this.getField("%s");
+            
+            if (!fRoot || !fLeaves) {
+                app.alert("Error: Fields not found. Please use Adobe Acrobat Reader.");
+            } else {
+                var valRoot = fRoot.value;
+                var valLeaves = fLeaves.value;
+                
+                if (valRoot == null) valRoot = "";
+                if (valLeaves == null) valLeaves = "";
+                
+                valRoot = String(valRoot).replace(/^\\s+|\\s+$/g, '');
+                valLeaves = String(valLeaves).replace(/^\\s+|\\s+$/g, '');
+                
+                var expectedRoot = "%s";
+                var expectedLeaves = "%s";
+                
+                if (valRoot == expectedRoot && valLeaves == expectedLeaves) {
+                    // 1. Update Status Field
+                    if (fStatus) { fStatus.value = "Correct!"; }
+                    
+                    // 2. Update Button Caption
+                    if (fBtn) { fBtn.buttonSetCaption("Correct!"); }
+                    
+                    // 3. Show Alert
+                    app.alert("Correct! Great job.");
+                } else {
+                    // 1. Update Status Field
+                    if (fStatus) { fStatus.value = "Wrong"; }
+                    
+                    // 2. Update Button Caption
+                    if (fBtn) { fBtn.buttonSetCaption("Try Again"); }
+                    
+                    // 3. Show Alert
+                    app.alert("Incorrect.\\nYour answer: Root=" + valRoot + ", Leaves=" + valLeaves + "\\nExpected: Root=" + expectedRoot + ", Leaves=" + expectedLeaves);
+                }
+            }
+        } catch (e) {
+            app.alert("JS Error: " + e);
+        }
+        """ % (self.field_root_name, self.field_leaves_name, self.status_field_name, btn_name,
+               self.correct_root, self.correct_leaves)
+        
+        # Create the widget annotation
+        x, y = self.canv.absolutePosition(0, 0)
+        rect = PDFArray([x, y, x + self.width, y + self.height])
+        
+        action = PDFDictionary({
+            'S': PDFName('JavaScript'),
+            'JS': PDFString(js_code)
+        })
+        
+        annot = PDFDictionary({
+            'Type': PDFName('Annot'),
+            'Subtype': PDFName('Widget'),
+            'FT': PDFName('Btn'),
+            'Ff': 65536, # PushButton flag
+            'Rect': rect,
+            'A': action,
+            'T': PDFString(btn_name),
+            'MK': PDFDictionary({
+                'BG': PDFArray([0.8, 0.8, 0.8]), 
+                'BC': PDFArray([0, 0, 0]),       
+                'CA': PDFString("Check Answer")  
+            })
+        })
+        
+        self.canv._addAnnotation(annot)
+        self.canv.restoreState()
 
 
 class PDFQuestionGenerator:
@@ -97,8 +247,8 @@ class PDFQuestionGenerator:
             leftIndent=20
         ))
     
-    def generate_pdf(self, output_path: str, n_instances_per_problem: int = 2):
-        """Generate complete PDF with questions and answers."""
+    def generate_pdf(self, output_path: str, n_instances_per_problem: int = 2, include_answers: bool = True):
+        """Generate complete PDF with questions and optionally answers."""
         # Create PDF document
         doc = SimpleDocTemplate(
             output_path,
@@ -113,7 +263,8 @@ class PDFQuestionGenerator:
         story = []
         
         # Title page
-        story.append(Paragraph("AI Search Strategy Questions", self.styles['CustomTitle']))
+        title_text = "AI Search Strategy Questions" + (" (With Answers)" if include_answers else " (Worksheet)")
+        story.append(Paragraph(title_text, self.styles['CustomTitle']))
         story.append(Spacer(1, 0.2 * inch))
         story.append(Paragraph(
             "Generated from Knowledge Graph Analysis",
@@ -122,11 +273,18 @@ class PDFQuestionGenerator:
         story.append(Spacer(1, 0.5 * inch))
         
         # Introduction
-        intro_text = """
-        This document contains problem instances for various AI search problems and questions 
-        about the most appropriate solving strategies. Each problem includes instance 
-        visualizations and detailed answers based on knowledge graph analysis.
-        """
+        if include_answers:
+            intro_text = """
+            This document contains problem instances for various AI search problems and questions 
+            about the most appropriate solving strategies. Each problem includes instance 
+            visualizations and detailed answers based on knowledge graph analysis.
+            """
+        else:
+            intro_text = """
+            This document contains problem instances for various AI search problems. 
+            Please analyze each instance and determine the most appropriate solving strategy.
+            You can type your answers directly into the text boxes provided.
+            """
         story.append(Paragraph(intro_text, self.styles['Normal']))
         story.append(PageBreak())
         
@@ -162,30 +320,81 @@ class PDFQuestionGenerator:
                 story.append(Paragraph(f"<b>Question:</b> {question}", self.styles['Question']))
                 story.append(Spacer(1, 0.15 * inch))
                 
-                # Generate answer
-                story.append(Paragraph("Answer:", self.styles['AnswerHeading']))
+                if include_answers:
+                    # Generate answer
+                    story.append(Paragraph("Answer:", self.styles['AnswerHeading']))
 
-                if problem_name == "MinMax":
-                    # doar calcul local, fără AnswerGenerator
-                    tree = instance.instance_data['tree']
-                    root_value, leaves_visited = self._minmax_alpha_beta(tree)
-                    story.append(Paragraph(
-                        f"<b>Root Value:</b> {root_value}<br/>"
-                        f"<b>Leaves Visited with Alpha-Beta:</b> {leaves_visited}",
-                        self.styles['AnswerBody']
-                    ))
-                    story.append(Spacer(1, 0.5 * inch))
+                    if problem_name == "MinMax":
+                        # doar calcul local, fără AnswerGenerator
+                        tree = instance.instance_data['tree']
+                        root_value, leaves_visited = self._minmax_alpha_beta(tree)
+                        story.append(Paragraph(
+                            f"<b>Root Value:</b> {root_value}<br/>"
+                            f"<b>Leaves Visited with Alpha-Beta:</b> {leaves_visited}",
+                            self.styles['AnswerBody']
+                        ))
+                        story.append(Spacer(1, 0.5 * inch))
+                    else:
+                        # restul problemelor folosesc AnswerGenerator
+                        answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
+                        story.extend(self._format_answer(answer))
                 else:
-                    # restul problemelor folosesc AnswerGenerator
-                    answer = self.answer_gen.generate_answer(problem_name, instance.instance_data)
-                    story.extend(self._format_answer(answer))
-
-                
-                story.append(Spacer(1, 0.3 * inch))
+                    if problem_name == "MinMax":
+                        # Specific layout for MinMax: Split fields + Check Button
+                        story.append(Paragraph("Your Answer:", self.styles['AnswerHeading']))
+                        story.append(Spacer(1, 0.1 * inch))
+                        
+                        # Root Value
+                        story.append(Paragraph("Root Value:", self.styles['Normal']))
+                        root_field_name = f"minmax_root_{j}"
+                        story.append(InteractiveTextField(root_field_name, width=150, height=20, multiline=False))
+                        story.append(Spacer(1, 0.1 * inch))
+                        
+                        # Leaves Visited
+                        story.append(Paragraph("Leaves Visited:", self.styles['Normal']))
+                        leaves_field_name = f"minmax_leaves_{j}"
+                        story.append(InteractiveTextField(leaves_field_name, width=150, height=20, multiline=False))
+                        story.append(Spacer(1, 0.2 * inch))
+                        
+                        # Calculate correct values
+                        tree = instance.instance_data['tree']
+                        root_value, leaves_visited = self._minmax_alpha_beta(tree)
+                        
+                        # Check Button
+                        status_field_name = f"minmax_status_{j}"
+                        
+                        # Add a label and the status field (initialized to "Ready")
+                        story.append(Paragraph("Status:", self.styles['Normal']))
+                        # IMPORTANT: read_only=False to ensure JS can update it in all viewers
+                        story.append(InteractiveTextField(status_field_name, width=200, height=20, value="Ready...", multiline=False, read_only=False))
+                        story.append(Spacer(1, 0.1 * inch))
+                        
+                        story.append(CheckAnswerButton(
+                            correct_root=str(root_value),
+                            correct_leaves=str(leaves_visited),
+                            field_root_name=root_field_name,
+                            field_leaves_name=leaves_field_name,
+                            status_field_name=status_field_name
+                        ))
+                        
+                        # Add a note about viewer compatibility
+                        story.append(Spacer(1, 0.1 * inch))
+                        story.append(Paragraph(
+                            "<i>Note: This interactive check requires a PDF viewer with JavaScript support (e.g., Adobe Acrobat Reader, Foxit Reader, or Master PDF Editor). It may not work in browser-based viewers.</i>",
+                            self.styles['AnswerBody']
+                        ))
+                    else:
+                        # Standard text field for other problems
+                        story.append(Paragraph("Your Answer:", self.styles['AnswerHeading']))
+                        story.append(Spacer(1, 0.1 * inch))
+                        field_name = f"answer_{problem_name.replace(' ', '_')}_{j}"
+                        story.append(InteractiveTextField(field_name))
+                    
+                    story.append(Spacer(1, 0.3 * inch))
             
-            # Page break between problems
+            # Separator between problems
             if i < len(problems):
-                story.append(PageBreak())
+                story.append(Spacer(1, 0.4 * inch))
         
         # Build PDF
         doc.build(story)
@@ -301,28 +510,34 @@ class PDFQuestionGenerator:
             instance = ProblemInstance(problem_type="MinMax", instance_data={"tree": tree_data})
             instances.append(instance)
         return instances
-    def _create_random_minmax_tree(self, depth, max_children, max_nodes=20, current_count=[0]):
+    def _create_random_minmax_tree(self, depth, max_children, max_nodes=20, current_count=None):
         """
         Returnează un arbore MinMax cu valori doar la frunze, limitat la max_nodes noduri.
         Folosim current_count ca listă pentru a putea modifica valoarea în recursie.
         """
-        if current_count[0] >= max_nodes:
-            # Am atins limita de noduri → facem frunză
-            return {"value": random.randint(1, 20)}
+        if current_count is None:
+            current_count = [0]
+            
+        # Increment for the current node being created
+        current_count[0] += 1
         
-        if depth == 0:
-            current_count[0] += 1
+        # Check limits
+        if current_count[0] > max_nodes or depth == 0:
             return {"value": random.randint(1, 20)}
-        else:
-            n_children = random.randint(2, min(max_children, 3))
-            children = []
-            for _ in range(n_children):
-                if current_count[0] >= max_nodes:
-                    break
-                child = self._create_random_minmax_tree(depth-1, max_children, max_nodes, current_count)
-                children.append(child)
-                current_count[0] += 1
-            return {"children": children} if children else {"value": random.randint(1, 20)}
+            
+        # Internal node
+        n_children = random.randint(2, min(max_children, 3))
+        children = []
+        for _ in range(n_children):
+            if current_count[0] >= max_nodes:
+                break
+            child = self._create_random_minmax_tree(depth-1, max_children, max_nodes, current_count)
+            children.append(child)
+            
+        if not children:
+            return {"value": random.randint(1, 20)}
+            
+        return {"children": children}
 
     def _draw_minmax_tree(self, tree, width=500, height=400, max_levels=4):
         """Desenează arbore MinMax cu spațiere mai mare între noduri."""

@@ -4,6 +4,7 @@ Shows side-by-side statistics and improvements
 """
 
 import json
+import os
 
 def load_kg(filepath):
     """Load knowledge graph from JSON."""
@@ -76,6 +77,22 @@ def analyze_kg(kg_data, version):
 
 def compare_kgs():
     """Compare V4 and V5 knowledge graphs."""
+    # Assuming V4 is somewhere else or we just compare current with itself for now/placeholder
+    # Updating to point to data/knowledge_graph.json as V5
+    
+    v5_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "knowledge_graph.json")
+    
+    # For V4, if it doesn't exist, we might need to skip or mock. 
+    # Assuming the user might have it or we just use V5 for both to test path
+    # But let's just update the path logic.
+    
+    if not os.path.exists(v5_path):
+        print(f"Error: {v5_path} not found")
+        return
+
+    print(f"Loading V5 KG from {v5_path}...")
+    v5_kg = load_kg(v5_path)
+    
     print("\n" + "="*80)
     print(" Knowledge Graph Comparison: V4 vs V5")
     print("="*80)
@@ -103,8 +120,6 @@ def compare_kgs():
     print(f"🤖 Algorithms: {v4_stats['algorithms']}")
     print(f"🎯 Problems: {v4_stats['problems']}")
     
-    # Load V5
-    v5_kg = load_kg('knowledge_graph.json')
     v5_stats = analyze_kg(v5_kg, "V5")
     
     # Comparison
