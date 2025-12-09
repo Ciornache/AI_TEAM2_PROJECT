@@ -64,6 +64,130 @@ class InteractiveTextField(Flowable):
         self.canv.restoreState()
 
 
+class InteractiveDropdown(Flowable):
+    """A flowable that draws an interactive PDF dropdown (combobox)."""
+    def __init__(self, name, options, width=200, height=20, value=""):
+        Flowable.__init__(self)
+        self.name = name
+        self.options = options
+        self.width = width
+        self.height = height
+        # Workaround for ReportLab bug: value must not be empty for choice fields
+        if not value and options:
+            self.value = options[0]
+        else:
+            self.value = value
+
+    def wrap(self, availWidth, availHeight):
+        return (self.width, self.height)
+
+    def draw(self):
+        self.canv.saveState()
+        
+        self.canv.acroForm.choice(
+            name=self.name,
+            tooltip=f"Select answer for {self.name}",
+            value=self.value,
+            options=self.options,
+            x=0, y=0,
+            width=self.width,
+            height=self.height,
+            borderStyle='solid',
+            borderColor=colors.black,
+            fillColor=colors.white,
+            textColor=colors.black,
+            forceBorder=True,
+            fieldFlags='combo',
+            relative=True
+        )
+        self.canv.restoreState()
+
+
+class CheckStrategyButton(Flowable):
+    """A flowable that draws a button to check the strategy answer with JS."""
+    def __init__(self, correct_strategy, field_name, status_field_name, width=120, height=30):
+        Flowable.__init__(self)
+        self.correct_strategy = correct_strategy
+        self.field_name = field_name
+        self.status_field_name = status_field_name
+        self.width = width
+        self.height = height
+
+    def wrap(self, availWidth, availHeight):
+        return (self.width, self.height)
+
+    def draw(self):
+        self.canv.saveState()
+        
+        # Draw button appearance
+        self.canv.setFillColor(colors.lightgrey)
+        self.canv.setStrokeColor(colors.black)
+        self.canv.rect(0, 0, self.width, self.height, fill=1, stroke=1)
+        
+        self.canv.setFillColor(colors.black)
+        self.canv.setFont("Helvetica-Bold", 10)
+        self.canv.drawCentredString(self.width/2, self.height/2 - 3, "Check Answer")
+        
+        btn_name = f"btn_check_{self.field_name}"
+        
+        js_code = """
+        try {
+            var fAnswer = this.getField("%s");
+            var fStatus = this.getField("%s");
+            var fBtn = this.getField("%s");
+            
+            if (!fAnswer) {
+                app.alert("Error: Answer field not found.");
+            } else {
+                var valAnswer = fAnswer.value;
+                if (valAnswer == null) valAnswer = "";
+                
+                var expected = "%s";
+                
+                // Simple string comparison
+                if (valAnswer === expected) {
+                    if (fStatus) { fStatus.value = "Correct!"; }
+                    if (fBtn) { fBtn.buttonSetCaption("Correct!"); }
+                    app.alert("Correct! " + expected + " is the best strategy.");
+                } else {
+                    if (fStatus) { fStatus.value = "Wrong"; }
+                    if (fBtn) { fBtn.buttonSetCaption("Try Again"); }
+                    app.alert("Incorrect. Try again!");
+                }
+            }
+        } catch (e) {
+            app.alert("JS Error: " + e);
+        }
+        """ % (self.field_name, self.status_field_name, btn_name, self.correct_strategy)
+        
+        # Create the widget annotation
+        x, y = self.canv.absolutePosition(0, 0)
+        rect = PDFArray([x, y, x + self.width, y + self.height])
+        
+        action = PDFDictionary({
+            'S': PDFName('JavaScript'),
+            'JS': PDFString(js_code)
+        })
+        
+        annot = PDFDictionary({
+            'Type': PDFName('Annot'),
+            'Subtype': PDFName('Widget'),
+            'FT': PDFName('Btn'),
+            'Ff': 65536, # PushButton flag
+            'Rect': rect,
+            'A': action,
+            'T': PDFString(btn_name),
+            'MK': PDFDictionary({
+                'BG': PDFArray([0.8, 0.8, 0.8]), 
+                'BC': PDFArray([0, 0, 0]),       
+                'CA': PDFString("Check Answer")  
+            })
+        })
+        
+        self.canv._addAnnotation(annot)
+        self.canv.restoreState()
+
+
 class CheckAnswerButton(Flowable):
     """A flowable that draws a button to check the answer with JS."""
     def __init__(self, correct_root, correct_leaves, field_root_name, field_leaves_name, status_field_name, width=120, height=30):
@@ -247,8 +371,17 @@ class PDFQuestionGenerator:
             leftIndent=20
         ))
     
-    def generate_pdf(self, output_path: str, n_instances_per_problem: int = 2, include_answers: bool = True):
-        """Generate complete PDF with questions and optionally answers."""
+    def generate_pdf(self, output_path: str, n_instances_per_problem: int = 2, include_answers: bool = True, problem_config: List[Dict] = None):
+        """
+        Generate complete PDF with questions and optionally answers.
+        
+        Args:
+            output_path: Path to save the PDF
+            n_instances_per_problem: Default number of instances (used if problem_config is None)
+            include_answers: Whether to include answers in the PDF
+            problem_config: Optional list of dicts defining the problems to include.
+                            Example: [{'name': 'N-Queens', 'count': 2}, {'name': 'MinMax', 'count': 1}]
+        """
         # Create PDF document
         doc = SimpleDocTemplate(
             output_path,
@@ -288,17 +421,34 @@ class PDFQuestionGenerator:
         story.append(Paragraph(intro_text, self.styles['Normal']))
         story.append(PageBreak())
         
-        # Generate instances for each problem
-        problems = [
-            ('N-Queens', self._generate_n_queens_instances, n_instances_per_problem),
-            ('Tower of Hanoi', self._generate_hanoi_instances, n_instances_per_problem),
-            ('Graph Coloring', self._generate_graph_coloring_instances, n_instances_per_problem),
-            ('Knight\'s Tour', self._generate_knight_tour_instances, n_instances_per_problem),
-            ('8-Puzzle', self._generate_8puzzle_instances, n_instances_per_problem),
-            ('MinMax', self._generate_minmax_instances, n_instances_per_problem)
-        ]
+        # Map problem names to generator functions
+        generator_map = {
+            'N-Queens': self._generate_n_queens_instances,
+            'Tower of Hanoi': self._generate_hanoi_instances,
+            'Graph Coloring': self._generate_graph_coloring_instances,
+            'Knight\'s Tour': self._generate_knight_tour_instances,
+            '8-Puzzle': self._generate_8puzzle_instances,
+            'MinMax': self._generate_minmax_instances
+        }
+
+        # Determine problems to generate
+        problems_to_process = []
+        if problem_config:
+            for item in problem_config:
+                name = item.get('name')
+                count = item.get('count', 1)
+                if name in generator_map:
+                    problems_to_process.append((name, generator_map[name], count))
+        else:
+            # Default behavior
+            default_problems = [
+                'N-Queens', 'Tower of Hanoi', 'Graph Coloring', 
+                'Knight\'s Tour', '8-Puzzle', 'MinMax'
+            ]
+            for name in default_problems:
+                problems_to_process.append((name, generator_map[name], n_instances_per_problem))
         
-        for i, (problem_name, generator_func, n_instances) in enumerate(problems, 1):
+        for i, (problem_name, generator_func, n_instances) in enumerate(problems_to_process, 1):
             # Problem section
             story.append(Paragraph(f"{i}. {problem_name}", self.styles['ProblemTitle']))
             story.append(Spacer(1, 0.2 * inch))
@@ -384,16 +534,55 @@ class PDFQuestionGenerator:
                             self.styles['AnswerBody']
                         ))
                     else:
-                        # Standard text field for other problems
-                        story.append(Paragraph("Your Answer:", self.styles['AnswerHeading']))
+                        # === Strategy Problems (N-Queens, Hanoi, etc.) ===
+                        # Use Dropdown + Check Button
+                        
+                        # 1. Get correct answer from KG
+                        answer_data = self.answer_gen.generate_answer(problem_name, instance.instance_data)
+                        recommendations = answer_data.get('recommendations', [])
+                        correct_strategy = recommendations[0]['algorithm'] if recommendations else "Unknown"
+                        
+                        story.append(Paragraph("Select Best Strategy:", self.styles['AnswerHeading']))
                         story.append(Spacer(1, 0.1 * inch))
-                        field_name = f"answer_{problem_name.replace(' ', '_')}_{j}"
-                        story.append(InteractiveTextField(field_name))
+                        
+                        # 2. Dropdown with options
+                        field_name = f"strategy_{problem_name.replace(' ', '_')}_{j}"
+                        options = [
+                            "Select Strategy...",
+                            "BFS", "DFS", "UCS", "IDDFS", "A*", "IDA*", "GBFS", "RBFS",
+                            "Hill Climbing", "Simulated Annealing", "Backtracking", 
+                            "Min-Conflicts", "Forward Checking", "Arc Consistency"
+                        ]
+                        # Ensure correct strategy is in the list
+                        if correct_strategy not in options:
+                            options.append(correct_strategy)
+                        options.sort()
+                        
+                        story.append(InteractiveDropdown(field_name, options, width=250))
+                        story.append(Spacer(1, 0.1 * inch))
+                        
+                        # 3. Check Button
+                        status_field_name = f"status_{problem_name.replace(' ', '_')}_{j}"
+                        story.append(Paragraph("Status:", self.styles['Normal']))
+                        story.append(InteractiveTextField(status_field_name, width=200, height=20, value="Ready...", multiline=False, read_only=False))
+                        story.append(Spacer(1, 0.1 * inch))
+                        
+                        story.append(CheckStrategyButton(
+                            correct_strategy=correct_strategy,
+                            field_name=field_name,
+                            status_field_name=status_field_name
+                        ))
+                        
+                        story.append(Spacer(1, 0.1 * inch))
+                        story.append(Paragraph(
+                            "<i>Note: Requires PDF viewer with JavaScript support.</i>",
+                            self.styles['AnswerBody']
+                        ))
                     
                     story.append(Spacer(1, 0.3 * inch))
             
             # Separator between problems
-            if i < len(problems):
+            if i < len(problems_to_process):
                 story.append(Spacer(1, 0.4 * inch))
         
         # Build PDF

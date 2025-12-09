@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Generator</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { display: flex; gap: 20px; }
+        .panel { flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }
+        .problem-item { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin-bottom: 5px; 
+            cursor: pointer; 
+            border: 1px solid #ddd;
+        }
+        .problem-item:hover { background: #e0e0e0; }
+        .config-item {
+            background: #e8f4f8;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #bde0eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button { padding: 8px 15px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; border: none; border-radius: 4px; }
+        .btn-danger { background: #dc3545; color: white; border: none; border-radius: 4px; font-size: 0.8em; }
+        input[type="number"] { width: 50px; padding: 5px; }
+        #result { margin-top: 20px; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>AI Test Generator</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <h3>Available Problems</h3>
+            <p>Click to add to test:</p>
+            <div id="available-problems">
+                {% for problem in problems %}
+                <div class="problem-item" onclick="addProblem('{{ problem }}')">
+                    {{ problem }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h3>Test Configuration</h3>
+            <p>Drag to reorder (not implemented yet), adjust counts:</p>
+            <div id="test-config">
+                <!-- Config items will go here -->
+                <p id="empty-msg" style="color: #888; font-style: italic;">No problems added yet.</p>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn-primary" onclick="generateTest()">Generate Test PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result" style="display: none;"></div>
+
+    <script>
+        let config = [];
+
+        function addProblem(name) {
+            config.push({ name: name, count: 1 });
+            renderConfig();
+        }
+
+        function removeProblem(index) {
+            config.splice(index, 1);
+            renderConfig();
+        }
+
+        function updateCount(index, count) {
+            config[index].count = parseInt(count);
+        }
+        
+        function moveUp(index) {
+            if (index > 0) {
+                [config[index], config[index-1]] = [config[index-1], config[index]];
+                renderConfig();
+            }
+        }
+        
+        function moveDown(index) {
+            if (index < config.length - 1) {
+                [config[index], config[index+1]] = [config[index+1], config[index]];
+                renderConfig();
+            }
+        }
+
+        function renderConfig() {
+            const container = document.getElementById('test-config');
+            
+            if (config.length === 0) {
+                container.innerHTML = '<p id="empty-msg" style="color: #888; font-style: italic;">No problems added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            config.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'config-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <br>
+                        <small>
+                            <a href="#" onclick="moveUp(${index}); return false;">↑</a> 
+                            <a href="#" onclick="moveDown(${index}); return false;">↓</a>
+                        </small>
+                    </div>
+                    <div>
+                        <label>Count: <input type="number" value="${item.count}" min="1" max="10" onchange="updateCount(${index}, this.value)"></label>
+                        <button class="btn-danger" onclick="removeProblem(${index})">X</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function generateTest() {
+            if (config.length === 0) {
+                alert('Please add at least one problem to the test.');
+                return;
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = '';
+            resultDiv.innerHTML = 'Generating... please wait.';
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ config: config }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `
+                        <h3>Success!</h3>
+                        <p>${data.message}</p>
+                        <ul>
+                            <li><a href="/download/${data.files.test}" target="_blank">Download Test (With Answers)</a></li>
+                            <li><a href="/download/${data.files.worksheet}" target="_blank">Download Worksheet</a></li>
+                        </ul>
+                    `;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
