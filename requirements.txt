@@ -19,3 +19,6 @@ trafilatura>=1.8.0
 
 # Note: After installing spacy, download the language model:
 # python -m spacy download en_core_web_sm
+
+# Web Interface
+flask>=3.0.0
