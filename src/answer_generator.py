@@ -7,6 +7,7 @@ Generates answers about best solving strategies based on knowledge graph and ins
 import json
 from typing import Dict, List, Tuple, Optional
 from .MinMaxNode import MinMaxNode, evaluate_tree
+from .csp_solver import CSPSolver, GraphColoringCSP, NQueensCSP
 
 
 class AnswerGenerator:
@@ -636,6 +637,204 @@ class AnswerGenerator:
         root = build_node(tree_structure)
         value, leaves_visited = evaluate_tree(root, maximizing=True)
         return {'root_value': value, 'leaves_visited': leaves_visited}
+
+    # ==================== CSP SOLVING WITH OPTIMIZATIONS ====================
+
+    def solve_csp_with_optimizations(self, problem_name: str, instance_data: dict) -> Dict:
+        """
+        Solve CSP with different optimization strategies.
+        Returns solution and statistics for each approach.
+        """
+        problem_lower = problem_name.lower()
+        results = {
+            'problem_name': problem_name,
+            'instance_analysis': self._analyze_instance(problem_name, instance_data),
+            'solutions': {}
+        }
+
+        # Graph Coloring CSP
+        if 'coloring' in problem_lower or 'graph' in problem_lower:
+            n_vertices = instance_data.get('n_vertices', 5)
+            n_colors = instance_data.get('n_colors', 3)
+            edges = instance_data.get('edges', [])
+
+            results['problem_details'] = {
+                'vertices': n_vertices,
+                'colors': n_colors,
+                'edges': len(edges)
+            }
+
+            # Basic Backtracking
+            print(f"  Solving with Basic Backtracking...")
+            csp = GraphColoringCSP.create_csp(n_vertices, edges, n_colors)
+            solution = csp.solve_backtracking_basic()
+            stats = csp.get_stats()
+            results['solutions']['backtracking'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # Forward Checking
+            print(f"  Solving with Forward Checking (FC)...")
+            csp = GraphColoringCSP.create_csp(n_vertices, edges, n_colors)
+            solution = csp.solve_with_fc()
+            stats = csp.get_stats()
+            results['solutions']['fc'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # MRV
+            print(f"  Solving with MRV...")
+            csp = GraphColoringCSP.create_csp(n_vertices, edges, n_colors)
+            solution = csp.solve_with_mrv()
+            stats = csp.get_stats()
+            results['solutions']['mrv'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # AC-3
+            print(f"  Solving with AC-3...")
+            csp = GraphColoringCSP.create_csp(n_vertices, edges, n_colors)
+            solution = csp.solve_with_ac3()
+            stats = csp.get_stats()
+            results['solutions']['ac3'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # FC + MRV
+            print(f"  Solving with FC + MRV...")
+            csp = GraphColoringCSP.create_csp(n_vertices, edges, n_colors)
+            solution = csp.solve_with_fc_and_mrv()
+            stats = csp.get_stats()
+            results['solutions']['fc_mrv'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+        # N-Queens CSP
+        elif 'queens' in problem_lower:
+            n = instance_data.get('n', 8)
+            n_prime = instance_data.get('n_prime', 0)
+            placed_queens = instance_data.get('placed_queens', {})
+
+            results['problem_details'] = {
+                'n': n,
+                'n_prime': n_prime,
+                'remaining': n - n_prime
+            }
+
+            # Basic Backtracking
+            print(f"  Solving N-Queens with Basic Backtracking...")
+            csp = NQueensCSP.create_csp(n, placed_queens)
+            solution = csp.solve_backtracking_basic()
+            stats = csp.get_stats()
+            results['solutions']['backtracking'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # Forward Checking
+            print(f"  Solving N-Queens with FC...")
+            csp = NQueensCSP.create_csp(n, placed_queens)
+            solution = csp.solve_with_fc()
+            stats = csp.get_stats()
+            results['solutions']['fc'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # MRV
+            print(f"  Solving N-Queens with MRV...")
+            csp = NQueensCSP.create_csp(n, placed_queens)
+            solution = csp.solve_with_mrv()
+            stats = csp.get_stats()
+            results['solutions']['mrv'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # AC-3
+            print(f"  Solving N-Queens with AC-3...")
+            csp = NQueensCSP.create_csp(n, placed_queens)
+            solution = csp.solve_with_ac3()
+            stats = csp.get_stats()
+            results['solutions']['ac3'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+            # FC + MRV
+            print(f"  Solving N-Queens with FC + MRV...")
+            csp = NQueensCSP.create_csp(n, placed_queens)
+            solution = csp.solve_with_fc_and_mrv()
+            stats = csp.get_stats()
+            results['solutions']['fc_mrv'] = {
+                'assignment': solution,
+                'constraint_checks': stats['constraint_checks'],
+                'backtracks': stats['backtracks'],
+                'valid': stats['valid']
+            }
+
+        return results
+
+    def generate_csp_report(self, csp_results: Dict) -> str:
+        """Generate a detailed report comparing CSP optimization strategies."""
+        report = f"**CSP Solving Report: {csp_results['problem_name']}**\n\n"
+
+        report += f"**Problem Details:**\n"
+        for key, val in csp_results.get('problem_details', {}).items():
+            report += f"- {key}: {val}\n"
+        report += "\n"
+
+        report += f"**Instance Analysis:**\n"
+        analysis = csp_results['instance_analysis']
+        report += f"- Size: {analysis['instance_size']}\n"
+        report += f"- Complexity: {analysis['complexity_level']}\n"
+        report += "\n"
+
+        report += f"**Solution Comparison (Efficiency):**\n"
+        report += f"{'Method':<15} {'Valid':<8} {'Checks':<12} {'Backtracks':<12}\n"
+        report += f"{'-'*47}\n"
+
+        for method, solution in csp_results['solutions'].items():
+            valid = "✓" if solution['valid'] else "✗"
+            checks = solution['constraint_checks']
+            backtracks = solution['backtracks']
+            report += f"{method:<15} {valid:<8} {checks:<12} {backtracks:<12}\n"
+
+        report += "\n**Recommendations:**\n"
+
+        # Find best method
+        best_method = min(csp_results['solutions'].items(),
+                         key=lambda x: x[1]['constraint_checks'])
+        report += f"✓ Best (least checks): {best_method[0].upper()} with {best_method[1]['constraint_checks']} checks\n"
+
+        best_method_bt = min(csp_results['solutions'].items(),
+                            key=lambda x: x[1]['backtracks'])
+        report += f"✓ Fewest backtracks: {best_method_bt[0].upper()} with {best_method_bt[1]['backtracks']} backtracks\n"
+
+        return report
 
 
 if __name__ == "__main__":

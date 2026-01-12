@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Solver - Constraint Satisfaction Problem</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        select, input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #1565c0;
+        }
+
+        #results {
+            margin-top: 30px;
+        }
+
+        .result-section {
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table tr:hover {
+            background: #f0f0f0;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .winner {
+            background: #fff3cd !important;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .solution-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+
+        .edge-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .edge-input input {
+            width: 50px;
+        }
+
+        .edge-input button {
+            padding: 8px 15px;
+            flex: none;
+            font-size: 0.9em;
+        }
+
+        .edge-list {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+
+        .edge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background: #f0f0f0;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .edge-item button {
+            padding: 3px 8px;
+            font-size: 0.8em;
+            flex: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .strategy-info {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .strategy-info strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 CSP Solver</h1>
+        <p class="subtitle">Constraint Satisfaction Problem Solver with Multiple Optimization Strategies</p>
+
+        <div class="main-grid">
+            <!-- Input Panel -->
+            <div class="panel">
+                <h2>Problem Configuration</h2>
+
+                <div class="form-group">
+                    <label for="problem-type">Problem Type:</label>
+                    <select id="problem-type" onchange="updateProblemPanel()">
+                        <option value="">-- Select Problem --</option>
+                        <option value="graph-coloring">Graph Coloring</option>
+                        <option value="nqueens">N-Queens</option>
+                    </select>
+                </div>
+
+                <!-- Graph Coloring Section -->
+                <div id="graph-coloring-section" style="display: none;">
+                    <div class="info-box">
+                        Color vertices such that no adjacent vertices have the same color.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="n-vertices">Number of Vertices:</label>
+                        <input type="number" id="n-vertices" value="5" min="3" max="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="n-colors">Number of Colors:</label>
+                        <input type="number" id="n-colors" value="3" min="2" max="5">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Graph Edges (u,v):</label>
+                        <div class="edge-input">
+                            <input type="number" id="edge-u" placeholder="u" min="0" max="9">
+                            <input type="number" id="edge-v" placeholder="v" min="0" max="9">
+                            <button class="btn-secondary" onclick="addEdge()">Add Edge</button>
+                        </div>
+                        <div class="edge-list" id="edge-list">
+                            <em style="color: #999;">No edges added yet</em>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- N-Queens Section -->
+                <div id="nqueens-section" style="display: none;">
+                    <div class="info-box">
+                        Place N queens on an N×N chessboard with no attacks.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="board-size">Board Size:</label>
+                        <input type="number" id="board-size" value="6" min="4" max="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pre-placed Queens (row: column):</label>
+                        <div class="edge-input">
+                            <input type="number" id="queen-row" placeholder="row" min="0" max="9">
+                            <input type="number" id="queen-col" placeholder="col" min="0" max="9">
+                            <button class="btn-secondary" onclick="addQueen()">Place Queen</button>
+                        </div>
+                        <div class="edge-list" id="queen-list">
+                            <em style="color: #999;">No queens placed yet</em>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategies Selection -->
+                <div class="form-group">
+                    <label>Optimization Strategies:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strategy-backtrack" checked>
+                            <label for="strategy-backtrack" style="margin: 0;">Backtracking</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strategy-fc" checked>
+                            <label for="strategy-fc" style="margin: 0;">Forward Checking</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strategy-mrv" checked>
+                            <label for="strategy-mrv" style="margin: 0;">MRV</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strategy-ac3" checked>
+                            <label for="strategy-ac3" style="margin: 0;">AC-3</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strategy-fcmrv" checked>
+                            <label for="strategy-fcmrv" style="margin: 0;">FC+MRV</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-primary" onclick="solveProblem()">Solve Problem</button>
+                    <button class="btn-secondary" onclick="resetForm()">Reset</button>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="panel">
+                <h2>Strategy Information</h2>
+                <div id="strategy-details"></div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let edges = [];
+        let placedQueens = {};
+
+        function updateProblemPanel() {
+            const problemType = document.getElementById('problem-type').value;
+            document.getElementById('graph-coloring-section').style.display =
+                problemType === 'graph-coloring' ? 'block' : 'none';
+            document.getElementById('nqueens-section').style.display =
+                problemType === 'nqueens' ? 'block' : 'none';
+
+            loadStrategyInfo();
+        }
+
+        function addEdge() {
+            const u = parseInt(document.getElementById('edge-u').value);
+            const v = parseInt(document.getElementById('edge-v').value);
+
+            if (isNaN(u) || isNaN(v)) {
+                alert('Enter valid vertex numbers');
+                return;
+            }
+
+            if (u === v) {
+                alert('Cannot add self-loop');
+                return;
+            }
+
+            edges.push([u, v]);
+            document.getElementById('edge-u').value = '';
+            document.getElementById('edge-v').value = '';
+            renderEdges();
+        }
+
+        function removeEdge(index) {
+            edges.splice(index, 1);
+            renderEdges();
+        }
+
+        function renderEdges() {
+            const container = document.getElementById('edge-list');
+            if (edges.length === 0) {
+                container.innerHTML = '<em style="color: #999;">No edges added yet</em>';
+                return;
+            }
+
+            container.innerHTML = edges.map((edge, i) =>
+                `<div class="edge-item">
+                    <span>(${edge[0]}, ${edge[1]})</span>
+                    <button class="btn-secondary" onclick="removeEdge(${i})">Remove</button>
+                </div>`
+            ).join('');
+        }
+
+        function addQueen() {
+            const row = parseInt(document.getElementById('queen-row').value);
+            const col = parseInt(document.getElementById('queen-col').value);
+
+            if (isNaN(row) || isNaN(col)) {
+                alert('Enter valid row and column numbers');
+                return;
+            }
+
+            if (row in placedQueens) {
+                alert('Queen already placed in this row');
+                return;
+            }
+
+            placedQueens[row] = col;
+            document.getElementById('queen-row').value = '';
+            document.getElementById('queen-col').value = '';
+            renderQueens();
+        }
+
+        function removeQueen(row) {
+            delete placedQueens[row];
+            renderQueens();
+        }
+
+        function renderQueens() {
+            const container = document.getElementById('queen-list');
+            const queens = Object.entries(placedQueens);
+
+            if (queens.length === 0) {
+                container.innerHTML = '<em style="color: #999;">No queens placed yet</em>';
+                return;
+            }
+
+            container.innerHTML = queens.map(([row, col]) =>
+                `<div class="edge-item">
+                    <span>Row ${row}: Column ${col}</span>
+                    <button class="btn-secondary" onclick="removeQueen(${row})">Remove</button>
+                </div>`
+            ).join('');
+        }
+
+        async function loadStrategyInfo() {
+            try {
+                const response = await fetch('/csp-info');
+                const strategies = await response.json();
+
+                const detailsHtml = Object.entries(strategies).map(([key, strategy]) => `
+                    <div class="strategy-info">
+                        <strong>${strategy.name}</strong><br>
+                        <small>
+                            <strong>Description:</strong> ${strategy.description}<br>
+                            <strong>Time:</strong> ${strategy.complexity_time}<br>
+                            <strong>Best for:</strong> ${strategy.best_for}
+                        </small>
+                    </div>
+                `).join('');
+
+                document.getElementById('strategy-details').innerHTML = detailsHtml;
+            } catch (error) {
+                console.error('Error loading strategy info:', error);
+            }
+        }
+
+        async function solveProblem() {
+            const problemType = document.getElementById('problem-type').value;
+
+            if (!problemType) {
+                alert('Please select a problem type');
+                return;
+            }
+
+            // Collect selected strategies
+            const strategies = [];
+            if (document.getElementById('strategy-backtrack').checked) strategies.push('backtracking');
+            if (document.getElementById('strategy-fc').checked) strategies.push('fc');
+            if (document.getElementById('strategy-mrv').checked) strategies.push('mrv');
+            if (document.getElementById('strategy-ac3').checked) strategies.push('ac3');
+            if (document.getElementById('strategy-fcmrv').checked) strategies.push('fc_mrv');
+
+            if (strategies.length === 0) {
+                alert('Please select at least one strategy');
+                return;
+            }
+
+            let payload;
+
+            if (problemType === 'graph-coloring') {
+                const nVertices = parseInt(document.getElementById('n-vertices').value);
+                const nColors = parseInt(document.getElementById('n-colors').value);
+
+                if (edges.length === 0) {
+                    alert('Please add at least one edge');
+                    return;
+                }
+
+                payload = {
+                    problem_type: 'Graph Coloring',
+                    parameters: {
+                        n_vertices: nVertices,
+                        n_colors: nColors,
+                        edges: edges
+                    },
+                    strategies: strategies
+                };
+            } else if (problemType === 'nqueens') {
+                const boardSize = parseInt(document.getElementById('board-size').value);
+
+                payload = {
+                    problem_type: 'N-Queens',
+                    parameters: {
+                        n: boardSize,
+                        placed_queens: placedQueens
+                    },
+                    strategies: strategies
+                };
+            }
+
+            displayResults('<div class="loading"><div class="spinner"></div><p>Solving...</p></div>');
+
+            try {
+                const response = await fetch('/solve-csp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displaySolutionResults(data);
+                } else {
+                    displayError(data.error || 'Unknown error occurred');
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        function displayResults(html) {
+            document.getElementById('results').innerHTML = html;
+        }
+
+        function displaySolutionResults(data) {
+            let html = '<div class="result-section">';
+            html += `<h3>Results for ${data.problem_type}</h3>`;
+
+            // Comparison table
+            html += '<h4 style="margin-top: 15px; color: #333;">Strategy Comparison</h4>';
+            html += '<table class="comparison-table">';
+            html += '<thead><tr><th>Strategy</th><th>Status</th><th>Checks</th><th>Backtracks</th></tr></thead>';
+            html += '<tbody>';
+
+            Object.entries(data.comparison).forEach(([strategy, stats]) => {
+                const isWinner = data.best_strategy && strategy === data.best_strategy.name;
+                const rowClass = isWinner ? 'winner' : '';
+                html += `<tr class="${rowClass}">
+                    <td><strong>${strategy}</strong></td>
+                    <td><span class="status-badge badge-success">✓ Solved</span></td>
+                    <td>${stats.checks}</td>
+                    <td>${stats.backtracks}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+
+            // Best strategy
+            if (data.best_strategy) {
+                html += `<div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                    <strong style="color: #856404;">⭐ Most Efficient Strategy:</strong> ${data.best_strategy.name.toUpperCase()}
+                    <br><small style="color: #856404;">Constraint Checks: ${data.best_strategy.checks} | Backtracks: ${data.best_strategy.backtracks}</small>
+                </div>`;
+            }
+
+            html += '</div>';
+
+            // Solutions
+            Object.entries(data.results).forEach(([strategy, result]) => {
+                html += '<div class="result-section">';
+                html += `<h3>Solution - ${strategy.toUpperCase()}</h3>`;
+                html += `<div>Constraint Checks: <strong>${result.constraint_checks}</strong></div>`;
+                html += `<div>Backtracks: <strong>${result.backtracks}</strong></div>`;
+
+                if (result.solution) {
+                    html += `<div class="solution-box"><strong>Assignment:</strong><pre>${JSON.stringify(result.solution, null, 2)}</pre></div>`;
+                }
+
+                html += '</div>';
+            });
+
+            displayResults(html);
+        }
+
+        function displayError(message) {
+            displayResults(`<div class="error-message">❌ Error: ${message}</div>`);
+        }
+
+        function resetForm() {
+            document.getElementById('problem-type').value = '';
+            edges = [];
+            placedQueens = {};
+            renderEdges();
+            renderQueens();
+            document.getElementById('results').innerHTML = '';
+            updateProblemPanel();
+        }
+
+        // Initialize
+        loadStrategyInfo();
+    </script>
+</body>
+</html>
+

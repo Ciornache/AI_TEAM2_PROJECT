@@ -428,7 +428,9 @@ class PDFQuestionGenerator:
             'Graph Coloring': self._generate_graph_coloring_instances,
             'Knight\'s Tour': self._generate_knight_tour_instances,
             '8-Puzzle': self._generate_8puzzle_instances,
-            'MinMax': self._generate_minmax_instances
+            'MinMax': self._generate_minmax_instances,
+            'CSP': self._generate_csp_problem_instances,
+            'CSP - Graph Coloring & N-Queens': self._generate_csp_problem_instances
         }
 
         # Determine problems to generate
@@ -456,6 +458,12 @@ class PDFQuestionGenerator:
             # Generate instances
             instances = generator_func(n_instances)
             
+            # Special handling for CSP
+            if problem_name == "CSP" or problem_name == "CSP - Graph Coloring & N-Queens":
+                story.extend(self._generate_csp_instances(include_answers))
+                story.append(PageBreak())
+                continue
+
             for j, instance in enumerate(instances, 1):
                 # Instance heading
                 story.append(Paragraph(f"Instance {j}:", self.styles['InstanceTitle']))
@@ -1101,6 +1109,211 @@ class PDFQuestionGenerator:
             heur_text = f"<b>Recommended Heuristics:</b> {', '.join(answer['heuristics'])}"
             elements.append(Paragraph(heur_text, self.styles['AnswerBody']))
             elements.append(Spacer(1, 0.3 * inch))
+
+        return elements
+
+    def _generate_csp_problem_instances(self, n: int) -> List[ProblemInstance]:
+        """Generate CSP problem instances in ProblemInstance format."""
+        instances = []
+
+        # CSP Instance 1: Graph Coloring
+        gc_instance = ProblemInstance(
+            problem_type="CSP - Graph Coloring",
+            instance_data={
+                'type': 'graph_coloring',
+                'n_vertices': 5,
+                'n_colors': 3,
+                'edges': [(0, 1), (1, 2), (2, 3), (3, 4), (4, 0), (0, 2)]
+            }
+        )
+        instances.append(gc_instance)
+
+        # CSP Instance 2: N-Queens with Partial Assignment
+        nq_instance = ProblemInstance(
+            problem_type="CSP - N-Queens",
+            instance_data={
+                'type': 'nqueens',
+                'n': 6,
+                'placed_queens': {0: 1, 1: 3, 2: 5}
+            }
+        )
+        instances.append(nq_instance)
+
+        # CSP Instance 3: Strategy Comparison
+        comparison_instance = ProblemInstance(
+            problem_type="CSP - Strategy Comparison",
+            instance_data={
+                'type': 'strategy_comparison',
+                'question': 'When to use AC-3 vs Backtracking?'
+            }
+        )
+        instances.append(comparison_instance)
+
+        # Return only the requested number
+        return instances[:n]
+
+    def _generate_csp_instances(self, include_answers: bool = True):
+        """Generate CSP problem instances for PDF."""
+        from .csp_solver import GraphColoringCSP, NQueensCSP
+
+        elements = []
+
+        # Graph Coloring Instance
+        elements.append(Paragraph("CSP 1: Graph Coloring - 5 Vertices, 3 Colors", self.styles['InstanceTitle']))
+        elements.append(Paragraph(
+            "<b>Problem:</b> Color a graph with 5 vertices using 3 colors such that "
+            "no adjacent vertices have the same color.",
+            self.styles['Normal']
+        ))
+        elements.append(Spacer(1, 0.15 * inch))
+
+        gc_edges = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 0), (0, 2)]
+        edge_text = "Edges: " + ", ".join([f"({u},{v})" for u, v in gc_edges])
+        elements.append(Paragraph(edge_text, self.styles['Normal']))
+        elements.append(Spacer(1, 0.15 * inch))
+
+        elements.append(Paragraph(
+            "<b>Question:</b> Which optimization strategy (Backtracking, FC, MRV, AC-3, FC+MRV) "
+            "would be most efficient for this instance and why?",
+            self.styles['Question']
+        ))
+
+        if include_answers:
+            # Solve and show results
+            csp_gc = GraphColoringCSP.create_csp(5, gc_edges, 3)
+            solution_bt = csp_gc.solve_backtracking_basic()
+            stats_bt = csp_gc.get_stats()
+
+            csp_fc = GraphColoringCSP.create_csp(5, gc_edges, 3)
+            solution_fc = csp_fc.solve_with_fc()
+            stats_fc = csp_fc.get_stats()
+
+            answer_text = f"""
+            <b>Answer:</b><br/>
+            <b>Most Efficient Strategy:</b> Backtracking<br/>
+            <b>Reason:</b> For small instances (5 vertices), the overhead of advanced optimization 
+            techniques (FC, AC-3) outweighs their benefits. Basic backtracking is simpler and faster.<br/>
+            <br/>
+            <b>Performance Comparison:</b><br/>
+            • Backtracking: {stats_bt['constraint_checks']} checks, {stats_bt['backtracks']} backtracks<br/>
+            • Forward Checking: {stats_fc['constraint_checks']} checks, {stats_fc['backtracks']} backtracks<br/>
+            <br/>
+            <b>Key Insight:</b> Simple algorithms often outperform complex ones for small problems. 
+            The preprocessing overhead of techniques like AC-3 becomes beneficial only for larger or 
+            more constrained problems.
+            """
+            elements.append(Paragraph(answer_text, self.styles['AnswerBody']))
+        else:
+            elements.append(InteractiveTextField(
+                name=f"CSP_GC_1",
+                width=450,
+                height=60,
+                value="",
+                read_only=False,
+                multiline=True
+            ))
+
+        elements.append(Spacer(1, 0.4 * inch))
+
+        # N-Queens Instance with partial assignment
+        elements.append(Paragraph("CSP 2: N-Queens - 6 Queens with Partial Assignment", self.styles['InstanceTitle']))
+        elements.append(Paragraph(
+            "<b>Problem:</b> Place 6 queens on a 6×6 chessboard with no attacks. "
+            "3 queens are already placed.",
+            self.styles['Normal']
+        ))
+        elements.append(Spacer(1, 0.15 * inch))
+
+        queens_placed = {0: 1, 1: 3, 2: 5}
+        queens_text = "Pre-placed Queens: " + ", ".join([f"Row {r}→Col {c}" for r, c in queens_placed.items()])
+        elements.append(Paragraph(queens_text, self.styles['Normal']))
+        elements.append(Spacer(1, 0.15 * inch))
+
+        elements.append(Paragraph(
+            "<b>Question:</b> Using Backtracking with Forward Checking and Partial Assignment, "
+            "what would be the optimal placement for the remaining queens?",
+            self.styles['Question']
+        ))
+
+        if include_answers:
+            csp_nq = NQueensCSP.create_csp(6, queens_placed)
+            solution_nq = csp_nq.solve_with_fc()
+            stats_nq = csp_nq.get_stats()
+
+            # Merge solutions
+            if solution_nq:
+                full_solution = {**queens_placed}
+                for var, col in solution_nq.items():
+                    row = int(var[1:])
+                    full_solution[row] = col
+
+                solution_list = ", ".join([f"Q{r}→Col{c}" for r in range(6) for c in [full_solution.get(r)]])
+            else:
+                solution_list = "No solution found"
+
+            answer_text = f"""
+            <b>Answer:</b><br/>
+            <b>Complete Solution:</b> {solution_list}<br/>
+            <br/>
+            <b>Solving Process:</b><br/>
+            • Strategy: Backtracking with Forward Checking<br/>
+            • Constraint Checks: {stats_nq['constraint_checks']}<br/>
+            • Backtracks: {stats_nq['backtracks']}<br/>
+            <br/>
+            <b>Key Insight:</b> Partial assignment dramatically reduces the search space. 
+            Pre-placing 3 queens reduces the problem from ~1.8M configurations to only ~360 configurations 
+            for the remaining 3 queens, enabling fast solution finding.
+            """
+            elements.append(Paragraph(answer_text, self.styles['AnswerBody']))
+        else:
+            elements.append(InteractiveTextField(
+                name=f"CSP_NQ_1",
+                width=450,
+                height=60,
+                value="",
+                read_only=False,
+                multiline=True
+            ))
+
+        elements.append(Spacer(1, 0.3 * inch))
+
+        # Strategy comparison question
+        elements.append(Paragraph("CSP 3: Strategy Comparison - When to use what?", self.styles['InstanceTitle']))
+        elements.append(Paragraph(
+            "<b>Question:</b> For what problem characteristics would you choose AC-3 over simple Backtracking, "
+            "and why?",
+            self.styles['Question']
+        ))
+
+        if include_answers:
+            answer_text = """
+            <b>Answer:</b><br/>
+            <b>Use AC-3 when:</b><br/>
+            • Problem has n > 10 variables<br/>
+            • Constraint graph is dense (many edges)<br/>
+            • Constraints are strict (small domain overlap)<br/>
+            • Preprocessing overhead is justified by shorter search<br/>
+            <br/>
+            <b>Why AC-3 wins in these cases:</b><br/>
+            1. <b>Constraint Propagation:</b> Eliminates inconsistent values upfront<br/>
+            2. <b>Reduced Search Space:</b> O(e*d³) preprocessing saves exponential search time<br/>
+            3. <b>Fewer Backtracks:</b> More pruning means fewer failed paths<br/>
+            <br/>
+            <b>Trade-off Analysis:</b><br/>
+            • Small instances: Backtracking wins (no preprocessing overhead)<br/>
+            • Large instances: AC-3 wins (strong pruning pays off)<br/>
+            • Break-even: Approximately n = 10-12 variables
+            """
+            elements.append(Paragraph(answer_text, self.styles['AnswerBody']))
+        else:
+            elements.append(InteractiveTextField(
+                name=f"CSP_Compare_1",
+                width=450,
+                height=80,
+                value="",
+                read_only=False,
+                multiline=True
+            ))
 
         return elements
 

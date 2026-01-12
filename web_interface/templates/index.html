@@ -27,16 +27,28 @@
         }
         button { padding: 8px 15px; cursor: pointer; }
         .btn-primary { background: #007bff; color: white; border: none; border-radius: 4px; }
+        .btn-secondary { background: #6c757d; color: white; border: none; border-radius: 4px; margin-top: 10px; display: block; width: 100%; }
         .btn-danger { background: #dc3545; color: white; border: none; border-radius: 4px; font-size: 0.8em; }
         input[type="number"] { width: 50px; padding: 5px; }
         #result { margin-top: 20px; padding: 10px; border-radius: 5px; }
         .success { background-color: #d4edda; color: #155724; }
         .error { background-color: #f8d7da; color: #721c24; }
+        .nav-section { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .nav-section h3 { margin-top: 0; }
+        .nav-link { display: inline-block; margin-right: 15px; }
+        .nav-link a { color: #007bff; text-decoration: none; font-weight: 600; }
+        .nav-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <h1>AI Test Generator</h1>
     
+    <div class="nav-section">
+        <h3>Navigation</h3>
+        <div class="nav-link"><a href="/">📝 Test Generator</a></div>
+        <div class="nav-link"><a href="/csp">🔧 CSP Solver</a></div>
+    </div>
+
     <div class="container">
         <div class="panel">
             <h3>Available Problems</h3>
