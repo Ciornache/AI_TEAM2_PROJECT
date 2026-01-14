@@ -12,3 +12,7 @@
 ## Deliverable 1
 
 [View Document](https://docs.google.com/document/d/18VLNGAvayVAL5PRn0WO424Ix12FKA-6hFZLf-8Fo7bg/edit?tab=t.0#heading=h.qis06wmfpyt)
+
+Knowledge Graph
+
+<img width="1169" height="716" alt="image" src="https://github.com/user-attachments/assets/58066675-c36b-450c-bd46-44a21f9e1011" />
