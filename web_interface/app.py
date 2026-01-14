@@ -33,6 +33,11 @@ def csp_solver():
     """Serve the CSP solver interface"""
     return render_template('csp_solver.html')
 
+@app.route('/validator')
+def answer_validator():
+    """Serve the answer validator interface"""
+    return render_template('answer_validator.html')
+
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
@@ -266,6 +271,300 @@ def csp_info():
 
     return jsonify(strategies), 200
 
+@app.route('/validate-answer', methods=['POST'])
+def validate_answer():
+    """
+    Validate student answer against correct answer.
+
+    Request JSON format:
+    {
+        "problem_type": "CSP Graph Coloring" or "CSP N-Queens",
+        "student_answer": "V0=Red, V1=Blue, V2=Green...",
+        "question_id": "csp_1",
+        "instance_data": {...}
+    }
+
+    Response:
+    {
+        "is_correct": true/false,
+        "score": 0-100,
+        "feedback": "explanation",
+        "correct_answer": "expected answer",
+        "explanation": "why this is correct/incorrect"
+    }
+    """
+    try:
+        data = request.json
+        problem_type = data.get('problem_type', '')
+        student_answer = data.get('student_answer', '').strip()
+        question_id = data.get('question_id', '')
+        instance_data = data.get('instance_data', {})
+
+        if not student_answer:
+            return jsonify({
+                'is_correct': False,
+                'score': 0,
+                'feedback': 'Answer cannot be empty',
+                'correct_answer': '',
+                'explanation': 'Please provide an answer'
+            }), 200
+
+        # Validate based on problem type
+        if 'CSP' in problem_type or 'Graph Coloring' in problem_type:
+            result = _validate_graph_coloring(student_answer, question_id, instance_data)
+        elif 'N-Queens' in problem_type:
+            result = _validate_nqueens(student_answer, question_id, instance_data)
+        elif 'Strategy' in problem_type:
+            result = _validate_strategy(student_answer, question_id)
+        else:
+            return jsonify({
+                'is_correct': False,
+                'score': 0,
+                'feedback': 'Unknown problem type',
+                'correct_answer': '',
+                'explanation': f'Problem type "{problem_type}" not recognized'
+            }), 200
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': str(e),
+            'is_correct': False,
+            'score': 0
+        }), 500
+
+def _validate_graph_coloring(student_answer, question_id, instance_data):
+    """Validate Graph Coloring answer"""
+
+    # Expected answer format: "V0=Red, V1=Blue, V2=Green, V3=Red, V4=Blue"
+    try:
+        # Parse student answer
+        assignments = {}
+        parts = student_answer.split(',')
+        for part in parts:
+            part = part.strip()
+            if '=' not in part:
+                return {
+                    'is_correct': False,
+                    'score': 0,
+                    'feedback': f'Invalid format in "{part}". Use format: V0=Red, V1=Blue, etc.',
+                    'correct_answer': 'V0=Color0, V1=Color1, ...',
+                    'explanation': 'Each assignment must be in format Variable=Color'
+                }
+
+            var, color = part.split('=')
+            var = var.strip()
+            color = color.strip()
+            assignments[var] = color
+
+        # Get instance data
+        n_vertices = instance_data.get('n_vertices', 5)
+        edges = instance_data.get('edges', [])
+        n_colors = instance_data.get('n_colors', 3)
+
+        # Check if all variables assigned
+        expected_vars = [f'V{i}' for i in range(n_vertices)]
+        missing = [v for v in expected_vars if v not in assignments]
+
+        if missing:
+            return {
+                'is_correct': False,
+                'score': 50,
+                'feedback': f'Missing assignments for: {", ".join(missing)}',
+                'correct_answer': 'All variables must be assigned',
+                'explanation': f'You assigned {len(assignments)} variables but should assign {n_vertices}'
+            }
+
+        # Check if all colors are valid
+        valid_colors = [str(i) for i in range(n_colors)]
+        valid_color_names = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple'][:n_colors]
+
+        for var, color in assignments.items():
+            if color not in valid_color_names and color not in valid_colors:
+                return {
+                    'is_correct': False,
+                    'score': 30,
+                    'feedback': f'Invalid color "{color}". Valid colors: {", ".join(valid_color_names)}',
+                    'correct_answer': f'Colors must be from: {", ".join(valid_color_names)}',
+                    'explanation': 'Used color not available in domain'
+                }
+
+        # Check constraints (no adjacent nodes have same color)
+        violations = []
+        for u, v in edges:
+            var_u = f'V{u}'
+            var_v = f'V{v}'
+            if assignments[var_u] == assignments[var_v]:
+                violations.append(f'{var_u}={assignments[var_u]} and {var_v}={assignments[var_v]}')
+
+        if violations:
+            return {
+                'is_correct': False,
+                'score': 25,
+                'feedback': f'Constraint violations: {"; ".join(violations[:2])}',
+                'correct_answer': 'No two adjacent vertices should have same color',
+                'explanation': f'Your solution violates {len(violations)} constraints. Adjacent vertices with same color: {violations[0]}'
+            }
+
+        # ✅ CORRECT!
+        return {
+            'is_correct': True,
+            'score': 100,
+            'feedback': 'Perfect! All constraints satisfied!',
+            'correct_answer': ', '.join([f'{var}={color}' for var, color in sorted(assignments.items())]),
+            'explanation': 'All variables assigned, all colors valid, and no constraint violations!'
+        }
+
+    except Exception as e:
+        return {
+            'is_correct': False,
+            'score': 0,
+            'feedback': f'Error parsing answer: {str(e)}',
+            'correct_answer': 'V0=Color0, V1=Color1, ...',
+            'explanation': 'Could not parse your answer. Check format.'
+        }
+
+def _validate_nqueens(student_answer, question_id, instance_data):
+    """Validate N-Queens answer"""
+
+    # Expected format: "Q0=Col1, Q1=Col3, Q2=Col5, ..."
+    try:
+        assignments = {}
+        parts = student_answer.split(',')
+
+        for part in parts:
+            part = part.strip()
+            if '=' not in part:
+                return {
+                    'is_correct': False,
+                    'score': 0,
+                    'feedback': f'Invalid format: "{part}". Use format: Q0=1, Q1=3, etc.',
+                    'correct_answer': 'Q0=Col0, Q1=Col1, ...',
+                    'explanation': 'Each queen assignment must be in format QRow=Column'
+                }
+
+            queen, col = part.split('=')
+            queen = queen.strip().upper()
+            col = int(col.strip())
+
+            # Extract row from Q0, Q1, etc.
+            row = int(queen[1:])
+            assignments[row] = col
+
+        board_size = instance_data.get('n', 8)
+        pre_placed = instance_data.get('placed_queens', {})
+
+        # Check if all queens placed
+        if len(assignments) != board_size:
+            return {
+                'is_correct': False,
+                'score': 40,
+                'feedback': f'Incomplete solution. Placed {len(assignments)}/{board_size} queens',
+                'correct_answer': f'All {board_size} queens must be placed',
+                'explanation': f'You placed {len(assignments)} queens but need {board_size}'
+            }
+
+        # Check column validity
+        for row, col in assignments.items():
+            if col < 0 or col >= board_size:
+                return {
+                    'is_correct': False,
+                    'score': 30,
+                    'feedback': f'Invalid column {col} for queen at row {row}. Valid: 0-{board_size-1}',
+                    'correct_answer': f'All columns must be in range 0-{board_size-1}',
+                    'explanation': 'Column out of bounds'
+                }
+
+        # Check no two queens in same column
+        columns = list(assignments.values())
+        if len(columns) != len(set(columns)):
+            duplicate_col = [c for c in columns if columns.count(c) > 1][0]
+            return {
+                'is_correct': False,
+                'score': 35,
+                'feedback': f'Two or more queens in column {duplicate_col}',
+                'correct_answer': 'Each queen must be in different column',
+                'explanation': 'Multiple queens share the same column'
+            }
+
+        # Check no two queens attack each other
+        violations = []
+        for r1 in range(board_size):
+            for r2 in range(r1 + 1, board_size):
+                c1 = assignments[r1]
+                c2 = assignments[r2]
+
+                # Check diagonal attack
+                if abs(r1 - r2) == abs(c1 - c2):
+                    violations.append(f'Q{r1}({r1},{c1}) attacks Q{r2}({r2},{c2})')
+
+        if violations:
+            return {
+                'is_correct': False,
+                'score': 25,
+                'feedback': f'Queens attack each other: {violations[0]}',
+                'correct_answer': 'No two queens should attack each other',
+                'explanation': f'Diagonal attack found: {violations[0]}'
+            }
+
+        # ✅ CORRECT!
+        return {
+            'is_correct': True,
+            'score': 100,
+            'feedback': 'Excellent! All queens placed safely!',
+            'correct_answer': ', '.join([f'Q{r}={c}' for r, c in sorted(assignments.items())]),
+            'explanation': 'All queens placed, no column conflicts, no attacks!'
+        }
+
+    except Exception as e:
+        return {
+            'is_correct': False,
+            'score': 0,
+            'feedback': f'Error parsing N-Queens answer: {str(e)}',
+            'correct_answer': 'Q0=0, Q1=4, Q2=7, ...',
+            'explanation': 'Could not parse your answer.'
+        }
+
+def _validate_strategy(student_answer, question_id):
+    """Validate strategy comparison answer"""
+
+    student_answer = student_answer.lower().strip()
+
+    # Expected keywords for AC-3 vs Backtracking question
+    correct_keywords = ['n', 'variables', 'dense', 'constraint', 'propagation', 'preprocessing']
+
+    found_keywords = sum(1 for kw in correct_keywords if kw in student_answer)
+
+    if found_keywords >= 3:
+        return {
+            'is_correct': True,
+            'score': 100,
+            'feedback': 'Great explanation of when to use AC-3!',
+            'correct_answer': 'AC-3 is better for large (n>10), dense constraint graphs where preprocessing overhead pays off',
+            'explanation': 'You correctly identified key factors for AC-3 selection'
+        }
+    elif found_keywords >= 1:
+        return {
+            'is_correct': False,
+            'score': 60,
+            'feedback': 'Partial credit - you mentioned some correct concepts',
+            'correct_answer': 'Should mention: problem size (n>10), constraint density, preprocessing benefits',
+            'explanation': 'Your answer is incomplete. Consider: problem characteristics, algorithm complexity, and when overhead pays off'
+        }
+    else:
+        return {
+            'is_correct': False,
+            'score': 0,
+            'feedback': 'Answer does not match expected strategy concepts',
+            'correct_answer': 'AC-3 excels on large, dense CSP instances due to strong constraint propagation',
+            'explanation': 'Try to mention: variable count, constraint graph density, and why AC-3 preprocessing helps'
+        }
+
+
 if __name__ == '__main__':
-    print("Starting Flask server...")
-    app.run(debug=False, port=5000)
+    print("Starting Flask server on http://localhost:5000")
+    print("Press Ctrl+C to stop the server")
+    app.run(debug=True, host='0.0.0.0', port=5000)

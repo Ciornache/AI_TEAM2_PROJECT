@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Answer Validator - Interactive Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .problem-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .problem-panel h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .problem-section {
+            margin-bottom: 15px;
+        }
+
+        .problem-section label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .problem-section p {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 12px;
+            border-radius: 6px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .input-panel h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-validate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-validate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-validate:active {
+            transform: translateY(0);
+        }
+
+        .btn-clear {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .results-panel {
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        .results-panel.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #ddd;
+        }
+
+        .result-status {
+            font-size: 1.5em;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 6px;
+        }
+
+        .result-status.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-status.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .score-box {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .result-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .result-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-item p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .result-item.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .result-item.error h4 {
+            color: #dc3545;
+        }
+
+        .result-item.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .result-item.success h4 {
+            color: #28a745;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .problem-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .problem-btn {
+            padding: 10px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .problem-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .problem-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .problem-selector {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 CSP Answer Validator</h1>
+            <p>Interactive Learning - Submit your answers and get instant feedback!</p>
+        </header>
+
+        <div class="main-content">
+            <!-- PROBLEM PANEL -->
+            <div class="card problem-panel">
+                <h2>📋 Problem Statement</h2>
+
+                <div class="problem-section">
+                    <label>Select Problem Type:</label>
+                    <div class="problem-selector">
+                        <button class="problem-btn active" onclick="selectProblem('graph_coloring')">
+                            🎨 Graph Coloring
+                        </button>
+                        <button class="problem-btn" onclick="selectProblem('nqueens')">
+                            ♛ N-Queens
+                        </button>
+                        <button class="problem-btn" onclick="selectProblem('strategy')">
+                            🧠 Strategy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Graph Coloring -->
+                <div id="gc-problem" class="problem-section">
+                    <label>Problem: Graph Coloring</label>
+                    <p><strong>Variables:</strong> V0, V1, V2, V3, V4</p>
+                    <p><strong>Colors:</strong> Red, Green, Blue</p>
+                    <p><strong>Constraints:</strong> Adjacent vertices must have different colors</p>
+                    <p><strong>Edges:</strong> (V0,V1), (V1,V2), (V2,V3), (V3,V4), (V4,V0), (V0,V2)</p>
+                    <p><strong>Partial Assignment:</strong> V0=Red, V3=Green</p>
+                </div>
+
+                <!-- N-Queens -->
+                <div id="nq-problem" class="problem-section" style="display: none;">
+                    <label>Problem: N-Queens (6x6)</label>
+                    <p><strong>Goal:</strong> Place 6 queens on a 6×6 chessboard</p>
+                    <p><strong>Constraints:</strong> No two queens attack each other</p>
+                    <p><strong>Pre-placed:</strong> Q0→Col1, Q1→Col3, Q2→Col5</p>
+                    <p><strong>Task:</strong> Place the remaining 3 queens (Q3, Q4, Q5)</p>
+                </div>
+
+                <!-- Strategy -->
+                <div id="st-problem" class="problem-section" style="display: none;">
+                    <label>Question: When to Use AC-3?</label>
+                    <p><strong>Question:</strong> For what problem characteristics would you choose AC-3 over simple Backtracking, and why?</p>
+                    <p><strong>Hint:</strong> Consider problem size, constraint density, and algorithm complexity</p>
+                </div>
+            </div>
+
+            <!-- INPUT PANEL -->
+            <div class="card input-panel">
+                <h2>✍️ Your Answer</h2>
+
+                <div class="form-group">
+                    <label for="answer">Enter your answer:</label>
+                    <textarea id="answer" placeholder="Example for Graph Coloring: V0=Red, V1=Blue, V2=Green, V3=Green, V4=Blue
+
+Example for N-Queens: Q3=0, Q4=2, Q5=4
+
+For Strategy: Type your explanation..."></textarea>
+                    <div class="help-text" id="help-text">
+                        Format: V0=Color, V1=Color, ... (separated by commas)
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-validate" onclick="validateAnswer()">✓ Validate Answer</button>
+                    <button class="btn-clear" onclick="clearAnswer()">⟲ Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS PANEL -->
+        <div class="card results-panel" id="resultsPanel">
+            <div class="result-header">
+                <div>
+                    <h2>📊 Validation Results</h2>
+                </div>
+                <div class="score-box">
+                    <span id="scoreDisplay">0</span>%
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="resultsContent">
+                <!-- Results will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentProblem = 'graph_coloring';
+
+        function selectProblem(problem) {
+            currentProblem = problem;
+
+            // Update button states
+            document.querySelectorAll('.problem-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update problem display
+            document.getElementById('gc-problem').style.display = problem === 'graph_coloring' ? 'block' : 'none';
+            document.getElementById('nq-problem').style.display = problem === 'nqueens' ? 'block' : 'none';
+            document.getElementById('st-problem').style.display = problem === 'strategy' ? 'block' : 'none';
+
+            // Update help text
+            const helpTexts = {
+                graph_coloring: 'Format: V0=Red, V1=Blue, V2=Green, ... (separated by commas)',
+                nqueens: 'Format: Q3=0, Q4=2, Q5=4, ... (queen position and column)',
+                strategy: 'Write a detailed explanation of when and why to use AC-3'
+            };
+            document.getElementById('help-text').textContent = helpTexts[problem];
+
+            // Clear previous answer
+            clearAnswer();
+        }
+
+        function clearAnswer() {
+            document.getElementById('answer').value = '';
+            document.getElementById('resultsPanel').classList.remove('show');
+            document.getElementById('answer').focus();
+        }
+
+        async function validateAnswer() {
+            const answer = document.getElementById('answer').value.trim();
+
+            if (!answer) {
+                alert('Please enter an answer!');
+                return;
+            }
+
+            const problemTypeMap = {
+                graph_coloring: 'CSP Graph Coloring',
+                nqueens: 'CSP N-Queens',
+                strategy: 'Strategy Comparison'
+            };
+
+            const instanceData = {
+                graph_coloring: {
+                    n_vertices: 5,
+                    edges: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [0, 2]],
+                    n_colors: 3
+                },
+                nqueens: {
+                    n: 6,
+                    placed_queens: { 0: 1, 1: 3, 2: 5 }
+                },
+                strategy: {}
+            };
+
+            try {
+                const response = await fetch('/validate-answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        problem_type: problemTypeMap[currentProblem],
+                        student_answer: answer,
+                        question_id: `${currentProblem}_1`,
+                        instance_data: instanceData[currentProblem]
+                    })
+                });
+
+                const result = await response.json();
+
+                // Display results with student answer for comparison
+                displayResults(result, answer);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error validating answer. Check console.');
+            }
+        }
+
+        function displayResults(result, studentAnswer) {
+            const panel = document.getElementById('resultsPanel');
+            const content = document.getElementById('resultsContent');
+
+            // Update score
+            document.getElementById('scoreDisplay').textContent = result.score;
+            document.getElementById('progressFill').style.width = result.score + '%';
+
+            // Build results HTML
+            let html = '';
+
+            if (result.is_correct) {
+                html += `
+                    <div class="result-item success">
+                        <h4>✅ Correct!</h4>
+                        <p>${result.feedback}</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="result-item error">
+                        <h4>❌ Incorrect</h4>
+                        <p>${result.feedback}</p>
+                    </div>
+                `;
+            }
+
+            // Show student answer vs correct answer comparison
+            html += `
+                <div class="result-item">
+                    <h4>👤 Your Answer</h4>
+                    <div class="code-block">${escapeHtml(studentAnswer)}</div>
+                </div>
+            `;
+
+            if (result.correct_answer) {
+                html += `
+                    <div class="result-item">
+                        <h4>✓ Expected Answer</h4>
+                        <div class="code-block">${escapeHtml(result.correct_answer)}</div>
+                    </div>
+                `;
+            }
+
+            if (result.explanation) {
+                html += `
+                    <div class="result-item">
+                        <h4>💡 Explanation</h4>
+                        <p>${result.explanation}</p>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+            panel.classList.add('show');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Focus on answer field on load
+        window.addEventListener('load', () => {
+            document.getElementById('answer').focus();
+        });
+    </script>
+</body>
+</html>
+
